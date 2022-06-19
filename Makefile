@@ -4,14 +4,14 @@ PORT = 8069
 SERVER_PARAM = $(PORT) 1 keys/server.crt keys/server_rsa_private.pem.unsecure
 CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure
 FAKE_CLIENT = $(SERVER_IP) $(PORT) fake/fake_client.crt fake/fake_client_rsa_private.pem.unsecure
-
+SERVER_COMPILING = server_mgr.c main_server.c -o build/server_test $(FLAGS)
 
 server: 
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  server_mgr.c main_server.c -o build/server_test $(FLAGS)
+	@gcc  $(SERVER_COMPILING)
 	@echo -e '\n*************************'
 	@echo -e '*** Running UNIT TEST ***'
 	@echo -e '*************************'
@@ -67,17 +67,17 @@ debug: main.c sbuffer.c
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc main.c sbuffer.c   -lmylist -L/lib/ -g -o build/test $(FLAGS)
+	@gcc server_mgr.c main_server.c -o build/server_test -g $(FLAGS) 
 	@echo -e '\n*************************'
 	@echo -e '*** Running UNIT TEST ***'
 	@echo -e '*************************'
 	@gdb -q -tui ./build/test
-valgrind: main.c sbuffer.c
+valgrind_server: 
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc main.c sbuffer.c -lmylist -L/lib/ -g -o build/test $(FLAGS)
+	@gcc $(SERVER_COMPILING) -g 
 	@echo -e '*** Running UNIT TEST ***'
 	@echo -e '*************************'
 	@export CK_FORK=no ;  valgrind -s ./build/test

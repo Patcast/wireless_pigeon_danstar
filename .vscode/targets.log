@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Jun 19 13:19:14 2022
+# Make data base, printed on Sun Jun 19 16:57:04 2022
 
 # Variables
 
@@ -95,7 +95,7 @@ CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /home/hurricane97/anaconda3/bin:/home/hurricane97/anaconda3/condabin:/home/hurricane97/.nvm/versions/node/v14.18.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/hurricane97/Library/Python/3.9/bin:/home/hurricane97/bin
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
@@ -135,7 +135,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 3268
+GIO_LAUNCHED_DESKTOP_FILE_PID = 66313
 # automatic
 %F = $(notdir $%)
 # environment
@@ -211,7 +211,7 @@ SERVER_IP = 127.0.0.1
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-26478e9b-a67d-47b2-bd78-0d98a7a7b96d.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-d7cb2317-23a5-4c9c-8553-107f2020eb65.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -259,6 +259,8 @@ GDK_BACKEND = x11
 # environment
 LC_PAPER = en_GB.UTF-8
 # environment
+NO_AT_BRIDGE = 1
+# environment
 LC_IDENTIFICATION = en_GB.UTF-8
 # environment
 QT_ACCESSIBILITY = 1
@@ -279,6 +281,7 @@ LC_MEASUREMENT = en_GB.UTF-8
 # environment
 SNAP_NAME = code
 # environment
+ 
 LC_ALL = C
 # environment
 CONDA_PYTHON_EXE = /home/hurricane97/anaconda3/bin/python
@@ -298,7 +301,6 @@ _CE_M =
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
 WINDOWPATH = 2
- 
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
@@ -314,7 +316,7 @@ VSCODE_PID = 3313
 # environment
 _CE_CONDA = 
 # variable set hash-table stats:
-# Load=150/1024=15%, Rehash=0, Collisions=25/175=14%
+# Load=151/1024=15%, Rehash=0, Collisions=25/176=14%
 
 # Pattern-specific Variable Values
 
@@ -495,6 +497,6 @@ server_pigeon/server_tls.c:
 # strcache performance: lookups = 49 / hit rate = 28%
 # hash-table stats:
 # Load=35/8192=0%, Rehash=0, Collisions=1/49=2%
-# Finished Make data base on Sun Jun 19 13:19:14 2022
+# Finished Make data base on Sun Jun 19 16:57:04 2022
 
  
