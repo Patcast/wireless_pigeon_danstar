@@ -1,6 +1,6 @@
 FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
 SERVER_IP = 127.0.0.1
-PORT = 8069
+PORT = 8063
 SERVER_PARAM = $(PORT) 1 keys/server.crt keys/server_rsa_private.pem.unsecure
 CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure
 FAKE_CLIENT = $(SERVER_IP) $(PORT) fake/fake_client.crt fake/fake_client_rsa_private.pem.unsecure
@@ -62,24 +62,26 @@ client_example:
 	@echo -e '*************************'
 	@sudo ./build/client_test $(SERVER_IP) $(PORT)
 
-debug: main.c sbuffer.c
+debug_server: 
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc server_mgr.c main_server.c -o build/server_test -g $(FLAGS) 
+	@gcc -g  $(SERVER_COMPILING) 
 	@echo -e '\n*************************'
-	@echo -e '*** Running UNIT TEST ***'
+	@echo -e '*** Running DEBUGGER ***'
 	@echo -e '*************************'
-	@gdb -q -tui ./build/test
+	@gdb -q -tui ./build/server_test $(SERVER_PARAM)
 valgrind_server: 
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc $(SERVER_COMPILING) -g 
-	@echo -e '*** Running UNIT TEST ***'
+	@gcc -g  $(SERVER_COMPILING) 
+	@echo -e '*** Running VALGRIND TEST ***'
 	@echo -e '*************************'
-	@export CK_FORK=no ;  valgrind -s ./build/test
+	@valgrind -s --leak-check=full ./build/server_test $(SERVER_PARAM)
+
+
 zip:
 	zip lab7_ex2.zip connmgr.c  errmacros.h connmgr.h config.h lib/dplist.c lib/dplist.h lib/tcpsock.c lib/tcpsock.h

@@ -12,7 +12,7 @@ int connections_handler(int* pt_server_sockfd, SSL_CTX** pt_ctx_server, status* 
     SSL** pt_ssl_client =  malloc(sizeof(SSL*)); 
 	MEMORY_ERROR( pt_ssl_client);	
 
-    while (1) {
+    do {
         if ((*pt_client_fd = accept(*pt_server_sockfd, (struct sockaddr *) &their_addr, &len))== -1) {
             perror("Error accepting socket");
             exit(errno);
@@ -38,18 +38,17 @@ int connections_handler(int* pt_server_sockfd, SSL_CTX** pt_ctx_server, status* 
 
             if (len <= 0) {
                 printf("news'%s'Sending failed! The error code is%d,The error message is'%s'\n", buf, errno, strerror(errno));
-                //goto finish;
                 close_ssl_client_connection(pt_ssl_client, pt_client_fd,current_status);
-            } else
-                printf("news'%s'Sent successfully, sent in total%d Byte!\n", buf, len);
+            } else printf("news'%s'Sent successfully, sent in total%d Byte!\n", buf, len);
 
             memset(&buf, 0,MAXBUF + 1);
-            len = SSL_read(*pt_ssl_client, buf, MAXBUF); // Be carful with the maximum BUFFER size 
-            if (len > 0)  printf("Message received successfully:'%s |||| size: %d Bytes of data\n", buf, len);
-            else printf("Message reception failed! The error code is%d, The error message is'%s'\n", errno, strerror(errno));
+            len = SSL_read(*pt_ssl_client, buf, MAXBUF); 
+
+            if (len > 0)  printf("Message received successfully:'%s size: %d Bytes of data\n", buf, len);
+            else {printf("Message reception failed! The error code is%d, The error message is'%s'\n", errno, strerror(errno));}
             close_ssl_client_connection(pt_ssl_client, pt_client_fd,current_status);
         }
-    }
+    }while (current_status!= SHUT_DOWN);
     return 0;
 }
 
@@ -58,7 +57,7 @@ int start_server (int myport, int lisnum, const char* certificate, const char* p
     
     status* current_status = malloc(sizeof(status*));
     MEMORY_ERROR( current_status);
-    *current_status = NOT_CONNECTED;
+    *current_status = SHUT_DOWN;
 
     struct sockaddr_in my_addr;
     SSL_CTX** pt_ctx_server= malloc(sizeof( SSL_CTX*)); 
@@ -117,18 +116,20 @@ int start_server (int myport, int lisnum, const char* certificate, const char* p
         printf("begin listen\n");
 
     connections_handler(pt_server_sockfd,pt_ctx_server,current_status);
-
+    shut_down_server(pt_ctx_server,pt_server_sockfd,current_status);
   
     return 0;
 }
 
 void shut_down_server( SSL_CTX** pt_ctx_server, int* pt_server_sockfd,status* current_status){
-    /* Turn off listening socket */
+
+
     close(*pt_server_sockfd); 
-    /* Release CTX */
     SSL_CTX_free(*pt_ctx_server);
     free(pt_server_sockfd);
     free(pt_ctx_server);
+    printf("Server was shutted down: Status %d\n", *current_status);
+    free(current_status);
 }
 
 
@@ -139,7 +140,7 @@ void close_ssl_client_connection(SSL** pt_ssl,int* pt_new_fd, status* current_st
     close(*pt_new_fd);
     free(pt_ssl);
     free(pt_new_fd);
-    printf("Connection with client is successfully closed.");
+    printf("Connection with client closed: Status %d.\n", *current_status);
 }
 
 /* static int verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
