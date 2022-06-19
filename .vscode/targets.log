@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Jun 18 13:05:31 2022
+# Make data base, printed on Sun Jun 19 13:19:14 2022
 
 # Variables
 
@@ -90,6 +90,8 @@ LC_NAME = en_GB.UTF-8
 VSCODE_CWD = /home/hurricane97
 # environment
 GSETTINGS_SCHEMA_DIR = /snap/code/99/usr/share/glib-2.0/schemas
+# makefile (from 'Makefile', line 5)
+CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -230,6 +232,8 @@ LC_TELEPHONE = en_GB.UTF-8
 CONDA_SHLVL = 1
 # default
 MAKE_COMMAND := make
+# makefile (from 'Makefile', line 4)
+SERVER_PARAM = $(PORT) 1 keys/server.crt keys/server_rsa_private.pem.unsecure
 # default
 .VARIABLES := 
 # automatic
@@ -260,6 +264,8 @@ LC_IDENTIFICATION = en_GB.UTF-8
 QT_ACCESSIBILITY = 1
 # default
 MAKEFILES := 
+# makefile (from 'Makefile', line 6)
+FAKE_CLIENT = $(SERVER_IP) $(PORT) fake/fake_client.crt fake/fake_client_rsa_private.pem.unsecure
 # environment
 SNAP_COOKIE = EVj6J6THYJZIuBCWhLdxkMugrhyMDyypQELcD_GSVDJp9EwkfAYG
 # environment
@@ -290,9 +296,9 @@ SNAP_REEXEC =
 _CE_M = 
 # environment
 CHROME_DESKTOP = code-url-handler.desktop
- 
 # environment
 WINDOWPATH = 2
+ 
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
@@ -308,7 +314,7 @@ VSCODE_PID = 3313
 # environment
 _CE_CONDA = 
 # variable set hash-table stats:
-# Load=147/1024=14%, Rehash=0, Collisions=25/172=15%
+# Load=150/1024=15%, Rehash=0, Collisions=25/175=14%
 
 # Pattern-specific Variable Values
 
@@ -316,9 +322,9 @@ _CE_CONDA =
 
 # Directories
 
-# . (device 66306, inode 4849713): 9 files, no impossibilities.
+# . (device 66306, inode 4849713): 19 files, no impossibilities.
 
-# 9 files, no impossibilities in 1 directories.
+# 19 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -330,16 +336,16 @@ client_example:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 39):
+#  recipe to execute (from 'Makefile', line 55):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  examples/client_cert.c -o build/client_test $(FLAGS)
+	@gcc  client_pigeon/client_tls.c -o build/client_test $(FLAGS)
 	@echo -e '\n*************************'
 	@echo -e '*** Running UNIT TEST ***'
 	@echo -e '*************************'
-	@sudo ./build/client_test $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure
+	@sudo ./build/client_test $(SERVER_IP) $(PORT)
 
 # Not a target:
 all:
@@ -352,16 +358,16 @@ client:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 17):
+#  recipe to execute (from 'Makefile', line 21):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  client_pigeon/client_tls.c -o build/client_test $(FLAGS)
+	@gcc  client_mgr.c -o build/client_test $(FLAGS)
 	@echo -e '\n*************************'
 	@echo -e '*** Running UNIT TEST ***'
 	@echo -e '*************************'
-	@sudo ./build/client_test $(SERVER_IP) $(PORT)
+	@sudo ./build/client_test $(CLIENT_PARAM) 
 
 # Not a target:
 main.c:
@@ -373,42 +379,14 @@ zip:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 69):
+#  recipe to execute (from 'Makefile', line 85):
 	zip lab7_ex2.zip connmgr.c  errmacros.h connmgr.h config.h lib/dplist.c lib/dplist.h lib/tcpsock.c lib/tcpsock.h
 
-server_example:
+server_example: server_pigeon/server_tls.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 28):
-	@echo -e '\n*******************************'
-	@echo -e '*** Compiling for UNIT TEST ***'
-	@echo -e '*******************************'
-	@mkdir -p build
-	@gcc  examples/server_cert.c -o build/server_test $(FLAGS)
-	@echo -e '\n*************************'
-	@echo -e '*** Running UNIT TEST ***'
-	@echo -e '*************************'
-	@sudo ./build/server_test $(PORT) 1 keys/server.crt keys/server_rsa_private.pem.unsecure
-
-# Not a target:
-sbuffer.c:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-# Not a target:
-Makefile:
-#  Implicit rule search has been done.
-#  Last modified 2022-06-18 13:05:29.242864751
-#  File has been updated.
-#  Successfully updated.
-
-server: server_pigeon/server_tls.c
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 6):
+#  recipe to execute (from 'Makefile', line 44):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -419,11 +397,39 @@ server: server_pigeon/server_tls.c
 	@echo -e '*************************'
 	@sudo ./build/server_test $(PORT)
 
+# Not a target:
+sbuffer.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-19 13:18:28.537906145
+#  File has been updated.
+#  Successfully updated.
+
+server:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 10):
+	@echo -e '\n*******************************'
+	@echo -e '*** Compiling for UNIT TEST ***'
+	@echo -e '*******************************'
+	@mkdir -p build
+	@gcc  server_mgr.c main_server.c -o build/server_test $(FLAGS)
+	@echo -e '\n*************************'
+	@echo -e '*** Running UNIT TEST ***'
+	@echo -e '*************************'
+	@sudo ./build/server_test $(SERVER_PARAM)
+
 debug: main.c sbuffer.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 50):
+#  recipe to execute (from 'Makefile', line 66):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -433,6 +439,21 @@ debug: main.c sbuffer.c
 	@echo -e '*** Running UNIT TEST ***'
 	@echo -e '*************************'
 	@gdb -q -tui ./build/test
+
+fake_client:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 32):
+	@echo -e '\n*******************************'
+	@echo -e '*** Compiling for UNIT TEST ***'
+	@echo -e '*******************************'
+	@mkdir -p build
+	@gcc  client_mgr.c -o build/client_test $(FLAGS)
+	@echo -e '\n*************************'
+	@echo -e '*** Running UNIT TEST ***'
+	@echo -e '*************************'
+	@sudo ./build/client_test $(FAKE_CLIENT) 
 
 # Not a target:
 .DEFAULT:
@@ -444,7 +465,7 @@ valgrind: main.c sbuffer.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 60):
+#  recipe to execute (from 'Makefile', line 76):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -461,19 +482,19 @@ server_pigeon/server_tls.c:
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=14/1024=1%, Rehash=0, Collisions=0/29=0%
+# Load=15/1024=1%, Rehash=0, Collisions=0/30=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 24 / storage = 232 B / avg = 9 B
-# current buf: size = 8162 B / used = 232 B / count = 24 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 35 / storage = 348 B / avg = 9 B
+# current buf: size = 8162 B / used = 348 B / count = 35 / avg = 9 B
 
-# strcache performance: lookups = 37 / hit rate = 35%
+# strcache performance: lookups = 49 / hit rate = 28%
 # hash-table stats:
-# Load=24/8192=0%, Rehash=0, Collisions=1/37=3%
-# Finished Make data base on Sat Jun 18 13:05:31 2022
+# Load=35/8192=0%, Rehash=0, Collisions=1/49=2%
+# Finished Make data base on Sun Jun 19 13:19:14 2022
 
  

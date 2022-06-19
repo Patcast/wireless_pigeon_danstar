@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     // SSL_VERIFY_FAIL_IF_NO_PEER_CERT---The client is required to provide a certificate, but it will be released if no certificate is used alone
     SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER|SSL_VERIFY_FAIL_IF_NO_PEER_CERT, NULL);
     // Set trust root certificate
-    if (SSL_CTX_load_verify_locations(ctx, "keys/ca.crt",NULL)<=0){
+    if (SSL_CTX_load_verify_locations(ctx, "keys/ca.crt",NULL)<=0){ //WORKING: use correct root CA
         ERR_print_errors_fp(stdout);
         exit(1);
     }

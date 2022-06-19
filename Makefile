@@ -3,12 +3,15 @@ SERVER_IP = 127.0.0.1
 PORT = 8069
 SERVER_PARAM = $(PORT) 1 keys/server.crt keys/server_rsa_private.pem.unsecure
 CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure
+FAKE_CLIENT = $(SERVER_IP) $(PORT) fake/fake_client.crt fake/fake_client_rsa_private.pem.unsecure
+
+
 server: 
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  source/server_cert.c -o build/server_test $(FLAGS)
+	@gcc  server_mgr.c main_server.c -o build/server_test $(FLAGS)
 	@echo -e '\n*************************'
 	@echo -e '*** Running UNIT TEST ***'
 	@echo -e '*************************'
@@ -19,11 +22,22 @@ client:
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  source/client_cert.c -o build/client_test $(FLAGS)
+	@gcc  client_mgr.c -o build/client_test $(FLAGS)
 	@echo -e '\n*************************'
 	@echo -e '*** Running UNIT TEST ***'
 	@echo -e '*************************'
 	@sudo ./build/client_test $(CLIENT_PARAM) 
+
+fake_client: 
+	@echo -e '\n*******************************'
+	@echo -e '*** Compiling for UNIT TEST ***'
+	@echo -e '*******************************'
+	@mkdir -p build
+	@gcc  client_mgr.c -o build/client_test $(FLAGS)
+	@echo -e '\n*************************'
+	@echo -e '*** Running UNIT TEST ***'
+	@echo -e '*************************'
+	@sudo ./build/client_test $(FAKE_CLIENT) 
 
 
 server_example: server_pigeon/server_tls.c 
