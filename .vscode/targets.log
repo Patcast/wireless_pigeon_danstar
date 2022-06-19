@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Jun 19 18:30:58 2022
+# Make data base, printed on Sun Jun 19 19:01:34 2022
 
 # Variables
 
@@ -293,6 +293,7 @@ GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # default
 SUFFIXES := 
 # makefile (from 'Makefile', line 1)
+ 
 FLAGS = -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
 # environment
 SNAP_REEXEC = 
@@ -317,7 +318,6 @@ VSCODE_PID = 3313
 # environment
 _CE_CONDA = 
 # variable set hash-table stats:
- 
 # Load=152/1024=15%, Rehash=0, Collisions=25/177=14%
 
 # Pattern-specific Variable Values
@@ -326,9 +326,9 @@ _CE_CONDA =
 
 # Directories
 
-# . (device 66306, inode 4849713): 19 files, no impossibilities.
+# . (device 66306, inode 4849713): 17 files, no impossibilities.
 
-# 19 files, no impossibilities in 1 directories.
+# 17 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -413,7 +413,7 @@ debug_server:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-19 18:24:43.465567011
+#  Last modified 2022-06-19 19:00:18.123598086
 #  File has been updated.
 #  Successfully updated.
 
@@ -465,7 +465,7 @@ valgrind_server:
 	@gcc -g  $(SERVER_COMPILING) 
 	@echo -e '*** Running VALGRIND TEST ***'
 	@echo -e '*************************'
-	@valgrind -s --leak-check=full ./build/server_test $(SERVER_PARAM)
+	@valgrind -s --leak-check=full --show-leak-kinds=all ./build/server_test $(SERVER_PARAM)
 
 # Not a target:
 server_pigeon/server_tls.c:
@@ -481,12 +481,12 @@ server_pigeon/server_tls.c:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 33 / storage = 345 B / avg = 10 B
-# current buf: size = 8162 B / used = 345 B / count = 33 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 31 / storage = 317 B / avg = 10 B
+# current buf: size = 8162 B / used = 317 B / count = 31 / avg = 10 B
 
-# strcache performance: lookups = 45 / hit rate = 26%
+# strcache performance: lookups = 43 / hit rate = 27%
 # hash-table stats:
-# Load=33/8192=0%, Rehash=0, Collisions=1/45=2%
-# Finished Make data base on Sun Jun 19 18:30:58 2022
+# Load=31/8192=0%, Rehash=0, Collisions=1/43=2%
+# Finished Make data base on Sun Jun 19 19:01:34 2022
 
  

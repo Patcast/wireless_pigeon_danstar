@@ -13,6 +13,7 @@ int connections_handler(int* pt_server_sockfd, SSL_CTX** pt_ctx_server, status* 
 	MEMORY_ERROR( pt_ssl_client);	
 
     do {
+        printf("starting client communication: Status %d\n",*current_status);
         if ((*pt_client_fd = accept(*pt_server_sockfd, (struct sockaddr *) &their_addr, &len))== -1) {
             perror("Error accepting socket");
             exit(errno);
@@ -48,7 +49,8 @@ int connections_handler(int* pt_server_sockfd, SSL_CTX** pt_ctx_server, status* 
             else {printf("Message reception failed! The error code is%d, The error message is'%s'\n", errno, strerror(errno));}
             close_ssl_client_connection(pt_ssl_client, pt_client_fd,current_status);
         }
-    }while (current_status!= SHUT_DOWN);
+        *current_status = SHUT_DOWN;
+    }while (!(*current_status== SHUT_DOWN));
     return 0;
 }
 
@@ -106,15 +108,14 @@ int start_server (int myport, int lisnum, const char* certificate, const char* p
     if (bind(*pt_server_sockfd, (struct sockaddr *) &my_addr, sizeof(struct sockaddr))== -1) {
         perror("error on bind");
         exit(1);
-    } else
-        printf("binded\n");
+    } else printf("binded\n");
 
     if (listen(*pt_server_sockfd, lisnum) == -1) {
         perror("error on listen");
         exit(1);
-    } else
-        printf("begin listen\n");
+    } else printf("begin listen\n");
 
+    *current_status = NOT_CONNECTED;
     connections_handler(pt_server_sockfd,pt_ctx_server,current_status);
     shut_down_server(pt_ctx_server,pt_server_sockfd,current_status);
   
@@ -122,22 +123,28 @@ int start_server (int myport, int lisnum, const char* certificate, const char* p
 }
 
 void shut_down_server( SSL_CTX** pt_ctx_server, int* pt_server_sockfd,status* current_status){
-
-
     close(*pt_server_sockfd); 
     SSL_CTX_free(*pt_ctx_server);
     free(pt_server_sockfd);
     free(pt_ctx_server);
     printf("Server was shutted down: Status %d\n", *current_status);
-    free(current_status);
+    free(current_status); // TODO: check for the memory leaks from the hidden functions
+    ERR_remove_state(0);
+    ERR_free_strings();
+    EVP_cleanup();
+    CRYPTO_cleanup_all_ex_data();
+    sk_SSL_COMP_free(SSL_COMP_get_compression_methods());
 }
 
 
 void close_ssl_client_connection(SSL** pt_ssl,int* pt_new_fd, status* current_status){
-    if (*current_status == CONNECTED) SSL_shutdown(*pt_ssl);
+    printf("Attempting to close client: Status %d\n", *current_status);
+    if (*current_status == CONNECTED) {
+        SSL_shutdown(*pt_ssl);
+    }
+    close(*pt_new_fd);
     SSL_free(*pt_ssl);
     *current_status = NOT_CONNECTED;
-    close(*pt_new_fd);
     free(pt_ssl);
     free(pt_new_fd);
     printf("Connection with client closed: Status %d.\n", *current_status);
@@ -164,7 +171,6 @@ void ShowCerts(SSL** pt_ssl, int* pt_new_fd ,status* current_state){
         printf("Issuer: %s\n", line);
         free(line);
         X509_free(cert); 
-
     }
     else{
         printf("No certificate information!\n");
