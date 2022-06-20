@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Jun 19 19:01:34 2022
+# Make data base, printed on Mon Jun 20 09:24:47 2022
 
 # Variables
 
@@ -135,7 +135,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 66313
+GIO_LAUNCHED_DESKTOP_FILE_PID = 81670
 # automatic
 %F = $(notdir $%)
 # environment
@@ -213,7 +213,7 @@ SERVER_IP = 127.0.0.1
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-d7cb2317-23a5-4c9c-8553-107f2020eb65.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-afc1d555-cbbb-4735-97b8-3540dbd363c9.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -281,6 +281,7 @@ PS1 = \[\e[32;1m\]\W\[\e[0m\] $
 # environment
 LC_MEASUREMENT = en_GB.UTF-8
 # environment
+ 
 SNAP_NAME = code
 # environment
 LC_ALL = C
@@ -293,7 +294,6 @@ GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # default
 SUFFIXES := 
 # makefile (from 'Makefile', line 1)
- 
 FLAGS = -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
 # environment
 SNAP_REEXEC = 
@@ -314,7 +314,7 @@ LC_ADDRESS = en_GB.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 3313
+VSCODE_PID = 81061
 # environment
 _CE_CONDA = 
 # variable set hash-table stats:
@@ -487,6 +487,6 @@ server_pigeon/server_tls.c:
 # strcache performance: lookups = 43 / hit rate = 27%
 # hash-table stats:
 # Load=31/8192=0%, Rehash=0, Collisions=1/43=2%
-# Finished Make data base on Sun Jun 19 19:01:34 2022
+# Finished Make data base on Mon Jun 20 09:24:47 2022
 
  
