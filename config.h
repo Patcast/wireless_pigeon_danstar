@@ -30,6 +30,10 @@
 #define REAL_TO_STRING(s) #s
 #define TO_STRING(s) REAL_TO_STRING(s)    //force macro-expansion on s before stringify s
 
-
+typedef struct {
+    u_int8_t state_requested;         
+    u_int8_t cmd_status;   
+    u_int32_t  instruction_code;         
+} wireless_data_t;
 
 #endif /* _CONFIG_H_ */

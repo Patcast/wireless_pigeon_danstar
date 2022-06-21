@@ -3,7 +3,7 @@
 
 //TODO: ADD LOGS 
 
-int start_server (int myport, int lisnum, const char* certificate, const char* priv_key){
+int start_server (int myport, const char* certificate, const char* priv_key){
     
     status* current_status = malloc(sizeof(status*));
     MEMORY_ERROR( current_status);
@@ -58,7 +58,7 @@ int start_server (int myport, int lisnum, const char* certificate, const char* p
         exit(1);
     } else printf("binded\n");
 
-    if (listen(*pt_server_sockfd, lisnum) == -1) {
+    if (listen(*pt_server_sockfd, CONNECTIONS_QUEUE) == -1) {
         perror("error on listen");
         exit(1);
     } else printf("begin listen\n");
@@ -129,24 +129,48 @@ void ShowCerts(SSL** pt_ssl, int* pt_new_fd ,status* current_state){
 }
 
 void messsage_handler (SSL** pt_ssl_client, int* pt_client_fd,status* current_status){
-           *current_status = CONNECTED;
-            char buf[MAXBUF + 1];
-            /* Start processing data transfer on each new connection */
-            memset(&buf, 0,MAXBUF + 1);
-            strcpy(buf, "server -> client: Connection established");
-            /* Send message to client */
-            int len = SSL_write(*pt_ssl_client, buf, strlen(buf));
+    int bytes;
+    char keep_connection = TRUE;
+    wireless_data_t data;
+    
+    do{
+        *current_status = CONNECTED;
+         char buf[MAXBUF + 1];
+        printf("\n------------------\n");
 
-            if (len <= 0) {
-                printf("news'%s'Sending failed! The error code is%d,The error message is'%s'\n", buf, errno, strerror(errno));
-                close_ssl_client_connection(pt_ssl_client, pt_client_fd,current_status);
-            } else printf("news'%s'Sent successfully, sent in total%d Byte!\n", buf, len);
+        bytes = sizeof(data.state_requested);
+        bytes = SSL_read(* pt_ssl_client, (void *) &data.state_requested,bytes);
+        if( bytes=0 ) break;
+        else if (bytes<0) {printf("Message reception failed!Error code= %d. Error message is:'%s'\n", errno, strerror(errno));}
+        
+        bytes = sizeof(data.cmd_status);
+        bytes = SSL_read(* pt_ssl_client, (void *) &data.cmd_status, bytes);
+        if( bytes=0 ) break;
+        else if (bytes<0) {printf("Message reception failed! Error code= %d. Error message is:'%s'\n", errno, strerror(errno));}
 
-            memset(&buf, 0,MAXBUF + 1);
-            len = SSL_read(*pt_ssl_client, buf, MAXBUF); 
+        bytes = sizeof(data.instruction_code);
+        bytes = SSL_read(* pt_ssl_client, (void *) &data.instruction_code, bytes);
+        if( bytes=0 ) break;
+        else if (bytes<0){printf("Message reception failed! Error code= %d. Error message is:'%s'\n", errno, strerror(errno));}
+        else printf("\nstate_requested: %d\ncommand status: %d\ninstruction code: %d\n\n",data.state_requested,data.cmd_status,data.instruction_code);
 
-            if (len > 0)  printf("Message received successfully:'%s size: %d Bytes of data\n", buf, len);
-            else {printf("Message reception failed! The error code is%d, The error message is'%s'\n", errno, strerror(errno));}         
+     /*    memset(&buf, 0,MAXBUF + 1);
+        len = SSL_read(*pt_ssl_client, buf, MAXBUF); 
+        if (len > 0) printf("Message from client: %s\n", buf);  
+        else if(len==0)break;
+        else {printf("Message reception failed! The error code is %d, The error message is'%s'\n", errno, strerror(errno));}  
+           */
+        
+        
+        memset(&buf, 0,MAXBUF + 1);
+        strcpy(buf, "I got your message!\n");
+        bytes = SSL_write(*pt_ssl_client, buf, strlen(buf));
+        if (bytes <= 0) {
+            printf("news'%s'Sending failed! The error code is %d,The error message is'%s'\n", buf, errno, strerror(errno));
+            close_ssl_client_connection(pt_ssl_client, pt_client_fd,current_status);
+        } 
+        else printf("Message sent:%s", buf);
+    }while(keep_connection);
 }
 
 

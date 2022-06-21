@@ -1,16 +1,88 @@
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <sys/socket.h>
-#include <resolv.h>
-#include <stdlib.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <openssl/ssl.h>
-#include <openssl/err.h>
+#include "client_mgr.h"
 
 #define MAXBUF 1024
+
+int start_client (const char* ip_address, const int myport, const char* certificate, const char* priv_key){
+
+    status* current_status = malloc(sizeof(status*));
+    MEMORY_ERROR( current_status);
+    *current_status = SHUT_DOWN;
+
+    SSL_CTX** pt_ctx_client= malloc(sizeof( SSL_CTX*)); 
+    MEMORY_ERROR( pt_ctx_client);
+      SSL_library_init();
+    OpenSSL_add_all_algorithms();
+    SSL_load_error_strings();
+    *pt_ctx_client = SSL_CTX_new(SSLv23_client_method());
+    if (*pt_ctx_client == NULL) {
+        ERR_print_errors_fp(stdout);
+        exit(1);
+    }
+    SSL_CTX_set_verify(*pt_ctx_client, SSL_VERIFY_PEER|SSL_VERIFY_FAIL_IF_NO_PEER_CERT, NULL);
+    if (SSL_CTX_load_verify_locations(*pt_ctx_client, "keys/ca.crt",NULL)<=0){ 
+        ERR_print_errors_fp(stdout);
+        exit(1);
+    }
+    if (SSL_CTX_use_certificate_file(*pt_ctx_client,certificate, SSL_FILETYPE_PEM) <= 0) {
+        ERR_print_errors_fp(stdout);
+        exit(1);
+    }
+    if (SSL_CTX_use_PrivateKey_file(*pt_ctx_client,priv_key, SSL_FILETYPE_PEM) <= 0) {
+        ERR_print_errors_fp(stdout);
+        exit(1);
+    }
+    if (!SSL_CTX_check_private_key(*pt_ctx_client)) {
+        ERR_print_errors_fp(stdout);
+        exit(1);
+    }
+    connections_handler(ip_address, myport, pt_ctx_client, current_status);
+    return 0;
+}
+
+int connections_handler(const char * ip_address, const int myport,SSL_CTX** pt_ctx_client, status* current_status){
+
+    struct sockaddr_in dest;
+    int* pt_client_sockfd =  malloc(sizeof(int)); //stockfd
+	MEMORY_ERROR( pt_client_sockfd);
+
+
+    SSL** pt_ssl_server= malloc(sizeof( SSL*)); 
+    MEMORY_ERROR( pt_ssl_server);
+
+
+    if ((*pt_client_sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        perror("Socket");
+        exit(errno);
+    }
+    printf("socket created\n");
+    memset(&dest, 0,sizeof(dest));
+    dest.sin_family = AF_INET;
+    dest.sin_port = htons(myport);
+    if (inet_aton(ip_address, (struct in_addr *) &dest.sin_addr.s_addr) == 0) {
+        perror(ip_address);
+        exit(errno);
+    }
+    printf("address created\n");
+
+    if (connect(*pt_client_sockfd , (struct sockaddr *) &dest, sizeof(dest)) != 0) {
+        perror("Connect ");
+        exit(errno);
+    }
+    printf("server connected\n");
+
+    *pt_ssl_server = SSL_new(*pt_ctx_client);
+    SSL_set_fd(*pt_ssl_server, *pt_client_sockfd );
+
+    if (SSL_connect(*pt_ssl_server) == -1)
+        ERR_print_errors_fp(stderr);
+    else {
+        printf("Connected with %s encryption\n", SSL_get_cipher(*pt_ssl_server));
+        ShowCerts(*pt_ssl_server);
+        messsage_handler(pt_ctx_client, current_status, pt_ssl_server, pt_client_sockfd);
+
+    }
+    return 0;
+}
 
 void ShowCerts(SSL * ssl)
 {
@@ -36,125 +108,64 @@ void ShowCerts(SSL * ssl)
         printf("No certificate information!\n");
 }
 
-int main(int argc, char **argv)
+
+void messsage_handler(SSL_CTX** pt_ctx_client, status* current_status, SSL** pt_ssl_server, int* pt_client_sockfd)
 {
-    int sockfd, len;
-    struct sockaddr_in dest;
+  
     char buffer[MAXBUF + 1];
-    SSL_CTX *ctx;
-    SSL *ssl;
+    int bytes;
+    int result;
+    printf("Type to start\n");
+    char keep_connection = TRUE;
 
-    if (argc != 5) {
-        printf("Parameter format error! The correct usage is as follows:\n\t\t%s IP Address port\n\t such as:\t%s 127.0.0.1 80\n This program is used to"
-             "IP The server with the address receives the most from one port MAXBUF Bytes of messages",
-             argv[0], argv[0]);
-        exit(0);
-    }
+    wireless_data_t data;
+    data.cmd_status=1;
+    data.instruction_code=555;
+    data.state_requested=22;
 
-    /* SSL For library initialization, refer to ssl-server.c code */
-    SSL_library_init();
-    OpenSSL_add_all_algorithms();
-    SSL_load_error_strings();
-    ctx = SSL_CTX_new(SSLv23_client_method());
-    if (ctx == NULL) {
-        ERR_print_errors_fp(stdout);
-        exit(1);
-    }
+    do{
+        memset(&buffer, 0,MAXBUF + 1);
+        scanf("%s",(char*) &buffer);
+        if(strcmp(buffer, "exit")==0){
+            keep_connection = FALSE;
+        }
+        else{
+            bytes = sizeof(data.state_requested);
+            if( SSL_write(* pt_ssl_server, (void *) &data.state_requested, bytes)<=0 ){printf("Sending failed! Error code= %d. Error message is:'%s'\n", errno, strerror(errno));}
+            bytes = sizeof(data.cmd_status);
+            if( SSL_write(* pt_ssl_server, (void *) &data.cmd_status, bytes)<=0 ){printf("Sending failed! Error code= %d. Error message is:'%s'\n", errno, strerror(errno));}
+            bytes = sizeof(data.instruction_code);
+            if( SSL_write(* pt_ssl_server, (void *) &data.instruction_code, bytes)<=0 ){printf("Sending failed! Error code= %d. Error message is:'%s'\n", errno, strerror(errno));}
 
-    // Two way validation
-    // SSL_VERIFY_PEER---Certificate certification is required and will be released without certificate
-    // SSL_VERIFY_FAIL_IF_NO_PEER_CERT---The client is required to provide a certificate, but it will be released if no certificate is used alone
-    SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER|SSL_VERIFY_FAIL_IF_NO_PEER_CERT, NULL);
-    // Set trust root certificate
-    if (SSL_CTX_load_verify_locations(ctx, "keys/ca.crt",NULL)<=0){ //WORKING: use correct root CA
-        ERR_print_errors_fp(stdout);
-        exit(1);
-    }
+            memset(&buffer, 0,MAXBUF + 1);
+            bytes = SSL_read(* pt_ssl_server, buffer, MAXBUF);
+            if (bytes > 0)
+                printf("Message from Server: %s\n", buffer);
+            else {
+                printf("Message reception failed! The error code is%d，The error message is'%s'\n",errno, strerror(errno));
+                close_connection(pt_ssl_server,pt_client_sockfd,pt_ctx_client, current_status);
+            }
+        }
+    }while(keep_connection);
 
-    /* Loads the user's digital certificate, which is used to send to the client. Certificate contains public key */
-    if (SSL_CTX_use_certificate_file(ctx, argv[3], SSL_FILETYPE_PEM) <= 0) {
-        ERR_print_errors_fp(stdout);
-        exit(1);
-    }
-    /* Load user private key */
-    if (SSL_CTX_use_PrivateKey_file(ctx, argv[4], SSL_FILETYPE_PEM) <= 0) {
-        ERR_print_errors_fp(stdout);
-        exit(1);
-    }
-    /* Check if the user's private key is correct */
-    if (!SSL_CTX_check_private_key(ctx)) {
-        ERR_print_errors_fp(stdout);
-        exit(1);
-    }
+    close_connection(pt_ssl_server,pt_client_sockfd,pt_ctx_client, current_status);    
+}
 
-    /* Create a socket for tcp communication */
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("Socket");
-        exit(errno);
-    }
-    printf("socket created\n");
+void close_connection(SSL** pt_ssl_server,int* pt_client_sockfd, SSL_CTX** pt_ctx_client, status* current_status){
+    SSL_shutdown(* pt_ssl_server);
+    SSL_free(* pt_ssl_server);
+    close(* pt_client_sockfd);
+    SSL_CTX_free(* pt_ctx_client);
+    printf("Client was shutted down: Status %d\n", *current_status);
 
-    /* Initialize the address and port information of the server (opposite party) */
-    //bzero(&dest, sizeof(dest));
-    memset(&dest, 0,sizeof(dest));
-    dest.sin_family = AF_INET;
-    dest.sin_port = htons(atoi(argv[2]));
-    if (inet_aton(argv[1], (struct in_addr *) &dest.sin_addr.s_addr) == 0) {
-        perror(argv[1]);
-        exit(errno);
-    }
-    printf("address created\n");
+    free( pt_ssl_server);
+    free(pt_client_sockfd);
+    free(pt_ctx_client);
+    free( current_status);
 
-    /* Connect to server */
-    if (connect(sockfd, (struct sockaddr *) &dest, sizeof(dest)) != 0) {
-        perror("Connect ");
-        exit(errno);
-    }
-    printf("server connected\n");
-
-    /* A new SSL based on ctx */
-    ssl = SSL_new(ctx);
-    SSL_set_fd(ssl, sockfd);
-    /* Establish SSL connection */
-    if (SSL_connect(ssl) == -1)
-        ERR_print_errors_fp(stderr);
-    else {
-        printf("Connected with %s encryption\n", SSL_get_cipher(ssl));
-        ShowCerts(ssl);
-    }
-
-    /* Receive messages sent by the other party, Max buf bytes at most */
-    //bzero(buffer, MAXBUF + 1);
-    memset(&buffer, 0,MAXBUF + 1);
-    /* Receive message from server */
-    len = SSL_read(ssl, buffer, MAXBUF);
-    if (len > 0)
-        printf("Message received successfully:'%s'，common%d Bytes of data\n",
-               buffer, len);
-    else {
-        printf
-            ("Message reception failed! The error code is%d，The error message is'%s'\n",
-             errno, strerror(errno));
-        goto finish;
-    }
-    //bzero(buffer, MAXBUF + 1);
-    memset(&buffer, 0,MAXBUF + 1);
-    strcpy(buffer, "from client->server");
-    /* Send message to server */
-    len = SSL_write(ssl, buffer, strlen(buffer));
-    if (len < 0)
-        printf
-            ("news'%s'Sending failed! The error code is%d，The error message is'%s'\n",
-             buffer, errno, strerror(errno));
-    else
-        printf("news'%s'Sent successfully, sent in total%d Byte!\n",
-               buffer, len);
-
-  finish:
-    /* Close connection */
-    SSL_shutdown(ssl);
-    SSL_free(ssl);
-    close(sockfd);
-    SSL_CTX_free(ctx);
-    return 0;
+    ERR_remove_state(0);
+    ERR_free_strings();
+    EVP_cleanup();
+    CRYPTO_cleanup_all_ex_data();
+    sk_SSL_COMP_free(SSL_COMP_get_compression_methods());
 }

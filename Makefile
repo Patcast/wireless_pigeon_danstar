@@ -1,11 +1,11 @@
 FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
 SERVER_IP = 127.0.0.1
-PORT = 8063
-SERVER_PARAM = $(PORT) 1 keys/server.crt keys/server_rsa_private.pem.unsecure
+PORT = 8020
+SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure
 CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure
 FAKE_CLIENT = $(SERVER_IP) $(PORT) fake/fake_client.crt fake/fake_client_rsa_private.pem.unsecure
 SERVER_COMPILING = server_mgr.c main_server.c -o build/server_test $(FLAGS)
-
+CLIENT_COMPILING = client_mgr.c main_client.c -o build/client_test $(FLAGS)
 server: 
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
@@ -22,7 +22,7 @@ client:
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  client_mgr.c -o build/client_test $(FLAGS)
+	@gcc  $(CLIENT_COMPILING)
 	@echo -e '\n*************************'
 	@echo -e '*** Running UNIT TEST ***'
 	@echo -e '*************************'

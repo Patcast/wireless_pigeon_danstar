@@ -2,18 +2,13 @@
 
 
 int main(int argc, char **argv) { /// SET UP SERVER 
-   unsigned int myport, lisnum, res;
+   unsigned int myport, res;
 
     if (argv[1])
         myport = atoi(argv[1]);
     else
         myport = 7838;
 
-    if (argv[2])
-        lisnum = atoi(argv[2]);
-    else
-        lisnum = 2; //TODO:Will it be better to only handle one connection at the time and only queue one connection.  
-    
-    res = start_server(myport,lisnum,argv[3],argv[4]);
+    res = start_server(myport,argv[2],argv[3]);
     return res;
 }

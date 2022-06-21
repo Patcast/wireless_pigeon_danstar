@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jun 20 09:24:47 2022
+# Make data base, printed on Tue Jun 21 10:13:24 2022
 
 # Variables
 
@@ -64,6 +64,8 @@ SNAP_INSTANCE_NAME = code
 SNAP_ARCH = amd64
 # makefile (from 'Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
+# makefile (from 'Makefile', line 8)
+CLIENT_COMPILING = client_mgr.c main_client.c -o build/client_test $(FLAGS)
 # automatic
 @F = $(notdir $@)
 # environment
@@ -95,7 +97,7 @@ CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PATH = /home/hurricane97/anaconda3/bin:/home/hurricane97/anaconda3/condabin:/home/hurricane97/.nvm/versions/node/v14.18.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/hurricane97/Library/Python/3.9/bin:/home/hurricane97/bin
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
@@ -121,7 +123,7 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # makefile (from 'Makefile', line 3)
-PORT = 8063
+PORT = 8020
 # environment
 INVOCATION_ID = fce755f3b7cb49ffa900b268e4821a25
 # environment
@@ -135,7 +137,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 81670
+GIO_LAUNCHED_DESKTOP_FILE_PID = 119073
 # automatic
 %F = $(notdir $%)
 # environment
@@ -213,7 +215,7 @@ SERVER_IP = 127.0.0.1
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-afc1d555-cbbb-4735-97b8-3540dbd363c9.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5b49a8e4-3028-4b2d-9afa-09f91393d6dc.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -235,7 +237,7 @@ CONDA_SHLVL = 1
 # default
 MAKE_COMMAND := make
 # makefile (from 'Makefile', line 4)
-SERVER_PARAM = $(PORT) 1 keys/server.crt keys/server_rsa_private.pem.unsecure
+SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure
 # default
 .VARIABLES := 
 # automatic
@@ -261,8 +263,6 @@ GDK_BACKEND = x11
 # environment
 LC_PAPER = en_GB.UTF-8
 # environment
-NO_AT_BRIDGE = 1
-# environment
 LC_IDENTIFICATION = en_GB.UTF-8
 # environment
 QT_ACCESSIBILITY = 1
@@ -281,8 +281,8 @@ PS1 = \[\e[32;1m\]\W\[\e[0m\] $
 # environment
 LC_MEASUREMENT = en_GB.UTF-8
 # environment
- 
 SNAP_NAME = code
+ 
 # environment
 LC_ALL = C
 # environment
@@ -314,7 +314,7 @@ LC_ADDRESS = en_GB.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 81061
+VSCODE_PID = 119126
 # environment
 _CE_CONDA = 
 # variable set hash-table stats:
@@ -326,9 +326,9 @@ _CE_CONDA =
 
 # Directories
 
-# . (device 66306, inode 4849713): 17 files, no impossibilities.
+# . (device 66306, inode 4849713): 18 files, no impossibilities.
 
-# 17 files, no impossibilities in 1 directories.
+# 18 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -367,7 +367,7 @@ client:
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  client_mgr.c -o build/client_test $(FLAGS)
+	@gcc  $(CLIENT_COMPILING)
 	@echo -e '\n*************************'
 	@echo -e '*** Running UNIT TEST ***'
 	@echo -e '*************************'
@@ -413,7 +413,7 @@ debug_server:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-19 19:00:18.123598086
+#  Last modified 2022-06-20 16:33:28.736912833
 #  File has been updated.
 #  Successfully updated.
 
@@ -481,12 +481,12 @@ server_pigeon/server_tls.c:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 31 / storage = 317 B / avg = 10 B
-# current buf: size = 8162 B / used = 317 B / count = 31 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 32 / storage = 331 B / avg = 10 B
+# current buf: size = 8162 B / used = 331 B / count = 32 / avg = 10 B
 
-# strcache performance: lookups = 43 / hit rate = 27%
+# strcache performance: lookups = 44 / hit rate = 27%
 # hash-table stats:
-# Load=31/8192=0%, Rehash=0, Collisions=1/43=2%
-# Finished Make data base on Mon Jun 20 09:24:47 2022
+# Load=32/8192=0%, Rehash=0, Collisions=1/44=2%
+# Finished Make data base on Tue Jun 21 10:13:24 2022
 
  

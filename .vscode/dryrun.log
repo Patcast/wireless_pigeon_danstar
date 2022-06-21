@@ -8,6 +8,6 @@ gcc  server_mgr.c main_server.c -o build/server_test -std=c11  -D_DEFAULT_SOURCE
 echo -e '\n*************************'
 echo -e '*** Running UNIT TEST ***'
 echo -e '*************************'
-sudo ./build/server_test 8063 1 keys/server.crt keys/server_rsa_private.pem.unsecure
+sudo ./build/server_test 8020 keys/server.crt keys/server_rsa_private.pem.unsecure
 make: Leaving directory '/home/hurricane97/Documents/dtu/danStar/software_ignition/tsl_com'
  
