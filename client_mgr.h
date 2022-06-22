@@ -1,16 +1,8 @@
-#include <resolv.h>
-#include "config.h"
+#include "conn_mgr.h"
 
+typedef enum buttons_cmd{BTN_CONNECT=0, BTN_ARM, BTN_IGNITE, BTN_RESET,BTN_SHUT_DOWN} btn_pressed_t;
 
-
-typedef enum server_status {SHUT_DOWN =0, NOT_CONNECTED,CONNECTED, ARM, IGNITE} status;
-
-int start_client (const char* ip_address, const int myport, const char* certificate, const char* priv_key);
-int connections_handler(const char * ip_address, const int myport,SSL_CTX** pt_ctx_client, status* current_status);
-void ShowCerts(SSL * ssl);
-void messsage_handler(SSL_CTX** pt_ctx_client, status* current_status, SSL** pt_ssl_server, int* pt_client_sockfd);
-void close_connection(SSL** pt_ssl_server,int* pt_client_sockfd, SSL_CTX** pt_ctx_client, status* current_status);
-
-
-
-
+int start_client (connection_params_t* params);
+int run_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input);
+int run_connect(connection_params_t* params);
+int select_state(btn_pressed_t input,connection_params_t* params);

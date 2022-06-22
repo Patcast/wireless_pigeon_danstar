@@ -4,8 +4,9 @@ PORT = 8020
 SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure
 CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure
 FAKE_CLIENT = $(SERVER_IP) $(PORT) fake/fake_client.crt fake/fake_client_rsa_private.pem.unsecure
-SERVER_COMPILING = server_mgr.c main_server.c -o build/server_test $(FLAGS)
-CLIENT_COMPILING = client_mgr.c main_client.c -o build/client_test $(FLAGS)
+SERVER_COMPILING = server_mgr.c server_main.c server_pigeon.c -o build/server_test $(FLAGS)
+CLIENT_COMPILING = conn_mgr.c client_main.c client_mgr.c -o build/client_test $(FLAGS)
+
 server: 
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
@@ -33,7 +34,7 @@ fake_client:
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  client_mgr.c -o build/client_test $(FLAGS)
+	@gcc  $(CLIENT_COMPILING)
 	@echo -e '\n*************************'
 	@echo -e '*** Running UNIT TEST ***'
 	@echo -e '*************************'
@@ -81,6 +82,16 @@ valgrind_server:
 	@echo -e '*** Running VALGRIND TEST ***'
 	@echo -e '*************************'
 	@valgrind -s --leak-check=full --show-leak-kinds=all ./build/server_test $(SERVER_PARAM)
+
+valgrind_client: 
+	@echo -e '\n*******************************'
+	@echo -e '*** Compiling for UNIT TEST ***'
+	@echo -e '*******************************'
+	@mkdir -p build
+	@gcc -g  $(CLIENT_COMPILING) 
+	@echo -e '*** Running VALGRIND TEST ***'
+	@echo -e '*************************'
+	@valgrind -s --leak-check=full ./build/server_test $(CLIENT_PARAM)
 
 
 zip:

@@ -1,4 +1,4 @@
-#include "sever_mgr.h"
+#include "server_mgr.h"
 
 
 int main(int argc, char **argv) { /// SET UP SERVER 
@@ -9,6 +9,6 @@ int main(int argc, char **argv) { /// SET UP SERVER
     else
         myport = 7838;
 
-    res = start_server(myport,argv[2],argv[3]);
+    res = run_server(myport,argv[2],argv[3]);
     return res;
 }

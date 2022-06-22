@@ -9,7 +9,9 @@ int main(int argc, char **argv){
     exit(0);
     }
 
-    start_client (argv[1], atoi(argv[2]),argv[3], argv[4]);
+
+    run_client(argv[1], atoi(argv[2]),argv[3], argv[4]);
 
     return 0;
 }
+

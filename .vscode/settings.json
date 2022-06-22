@@ -2,6 +2,7 @@
     "makefile.extensionOutputFolder": "./.vscode",
     "files.associations": {
         "err.h": "c",
-        "socket.h": "c"
+        "socket.h": "c",
+        "client_mgr.h": "c"
     }
 }
