@@ -1,13 +1,15 @@
 #include "conn_mgr.h"
 
-//#define MAXBUF 1024 
+
 
 
 int star_host_connection (connection_params_t* params){
     SSL_library_init();
     OpenSSL_add_all_algorithms();
     SSL_load_error_strings();
-    params->host_ctx = SSL_CTX_new(SSLv23_client_method());
+
+    params->host_ctx = (params->host_is_client == TRUE)?SSL_CTX_new(SSLv23_client_method()):SSL_CTX_new(SSLv23_server_method());
+
     if (params->host_ctx == NULL) {
         ERR_print_errors_fp(stdout);
         return 1;
@@ -33,19 +35,65 @@ int star_host_connection (connection_params_t* params){
         perror("Socket");
         return 1;
     }
+    printf("socket created\n");
     return 0;
 }
 
-int connect_with_server(const char * ip_address, const int myport,connection_params_t* params){
+int start_port_server (connection_params_t* params){
+    
+    struct sockaddr_in my_addr;
+
+    memset(&my_addr, 0, sizeof(my_addr));
+    my_addr.sin_family = PF_INET;
+    my_addr.sin_port = htons(params->host_port);
+    my_addr.sin_addr.s_addr = INADDR_ANY;
+
+    
+    if (bind(params->host_fd, (struct sockaddr *) &my_addr, sizeof(struct sockaddr))== -1) {
+        perror("error on bind");
+        exit(1);
+    } else printf("binded\n");
+
+    if (listen(params->host_fd, CONNECTIONS_QUEUE) == -1) {
+        perror("error on listen");
+        exit(1);
+    } else printf("begin listen\n");
+    params-> host_state = NOT_CONNECTED;
+    return 0;
+}
+
+int connect_with_client(connection_params_t* params){
+    socklen_t len = sizeof(struct sockaddr);
+    struct sockaddr_in their_addr;
+    
+    printf("starting client communication: Status %d\n",params->host_state);
+    if ((params->remote_fd = accept(params->host_fd, (struct sockaddr *) &their_addr, &len))== -1) {
+            perror("Error accepting socket");
+            //exit(errno);
+            return 1;
+    } else printf("server: got connection from %s, port %d, socket %d\n",inet_ntoa(their_addr.sin_addr), ntohs(their_addr.sin_port),params->remote_fd);
+
+    params->remote_ssl = SSL_new(params->host_ctx);// A new SSL based on ctx 
+    SSL_set_fd(params->remote_ssl, params->remote_fd); // Add the socket of the connected user to SSL
+
+    if (SSL_accept(params->remote_ssl) == -1) // Establish SSL connection. it calls verification callback
+        {
+            perror("\nError establishing the SSL connection during accept"); /// This error will be called if thereis an error with the verification.
+            printf("\nVerify that client is using a valid certificate\n");
+            return 1;
+        }
+    return 0;
+}
+
+int connect_with_server(connection_params_t* params){
 
     struct sockaddr_in dest;
 
-    printf("socket created\n");
     memset(&dest, 0,sizeof(dest));
     dest.sin_family = AF_INET;
-    dest.sin_port = htons(myport);
-    if (inet_aton(ip_address, (struct in_addr *) &dest.sin_addr.s_addr) == 0) {
-        perror(ip_address);
+    dest.sin_port = htons(params->host_port);
+    if (inet_aton(params->remote_ip_addr, (struct in_addr *) &dest.sin_addr.s_addr) == 0) {
+        perror(params->remote_ip_addr);
         exit(errno); //TODO: handle exit properly.
     }
     printf("address created\n");
@@ -59,26 +107,22 @@ int connect_with_server(const char * ip_address, const int myport,connection_par
     if (SSL_connect(params->remote_ssl) == -1){
          ERR_print_errors_fp(stderr);
          return 1;
-    }
-       
+    } 
     else {
         printf("Server connected with %s encryption\n", SSL_get_cipher(params->remote_ssl));
     }
     return 0;
 }
 
-void ShowCerts(SSL * ssl)
+int ShowCerts(SSL * ssl)
 {
     X509 *cert;
     char *line;
 
     cert = SSL_get_peer_certificate(ssl);
-    // SSL_get_verify_result()This is the point. SSL_CTX_set_verify()Only when the configuration is enabled or not and the authentication is not executed, can the function be called to verify the authentication
-    // If the verification fails, the program throws an exception to terminate the connection
-    if(SSL_get_verify_result(ssl) == X509_V_OK){
+
+    if(cert!=NULL && SSL_get_verify_result(ssl) == X509_V_OK){
         printf("Certificate verification passed\n");
-    }
-    if (cert != NULL) {
         printf("Digital certificate information:\n");
         line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
         printf("certificate: %s\n", line);
@@ -87,8 +131,10 @@ void ShowCerts(SSL * ssl)
         printf("Issuer: %s\n", line);
         free(line);
         X509_free(cert);
-    } else
+    } else{
         printf("No certificate information!\n");
+        return 1;
+    }     
 }
 
 
@@ -121,16 +167,30 @@ int read_from_remote(connection_params_t* params, wireless_data_t* msg_received)
     if( SSL_read(params->remote_ssl, (void *) &(msg_received->cmd_status), bytes)<=0 ) return 1;
 
     bytes = sizeof(msg_received->instruction_code);
-    if( SSL_read(params->remote_ssl, (void *) &(msg_received->instruction_code), bytes)<=0 ) return 1;
-    else printf("\nmessage received: %d\ncommand status: %d\ninstruction code: %d\n\n",msg_received->command,msg_received->cmd_status,msg_received->instruction_code);
+    if( SSL_read(params->remote_ssl, (void *) &(msg_received->instruction_code), bytes)<0 ) return 1;
+    else printf("\ncommand: %d\ncommand status: %d\ninstruction code: %d\n\n",msg_received->command,msg_received->cmd_status,msg_received->instruction_code);
+    return 0;
+}
+int close_remote_conn(connection_params_t* params){
+    printf("Attempting to close client: Status %d\n", params->host_state);
+    if (params->host_state == CONNECTED)SSL_shutdown(params->remote_ssl);
+    close(params->remote_fd);//TODO: Check that  this is close properly. And only when needed.
+    SSL_free(params->remote_ssl);
+    params->host_state= NOT_CONNECTED;
+    printf("Connection with client closed: Status %d.\n", params->host_state);
+    return 0;
 }
 
-int close_connection(connection_params_t* params){
-    SSL_shutdown(params->remote_ssl);
-    SSL_free(params->remote_ssl);
+
+int close_host_conn(connection_params_t* params){
+
+    if (params->host_is_client == TRUE){ // it should only be done in the case of client. The server does this previously for each client 
+        SSL_shutdown(params->remote_ssl);
+        SSL_free(params->remote_ssl);
+    }
     close(params->host_fd);
     SSL_CTX_free(params->host_ctx);
-    printf("Client was shutted down: Status %d\n",params->host_state);
+    printf("device is disconnected: Status %d\n",params->host_state);
     ERR_remove_state(0);
     ERR_free_strings();
     EVP_cleanup();

@@ -1,10 +1,10 @@
 FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
 SERVER_IP = 127.0.0.1
-PORT = 8020
+PORT = 8528
 SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure
 CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure
 FAKE_CLIENT = $(SERVER_IP) $(PORT) fake/fake_client.crt fake/fake_client_rsa_private.pem.unsecure
-SERVER_COMPILING = server_mgr.c server_main.c server_pigeon.c -o build/server_test $(FLAGS)
+SERVER_COMPILING = server_mgr.c server_main.c conn_mgr.c -o build/server_test $(FLAGS)
 CLIENT_COMPILING = conn_mgr.c client_main.c client_mgr.c -o build/client_test $(FLAGS)
 
 server: 

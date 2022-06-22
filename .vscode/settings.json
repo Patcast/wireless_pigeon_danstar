@@ -3,6 +3,7 @@
     "files.associations": {
         "err.h": "c",
         "socket.h": "c",
-        "client_mgr.h": "c"
+        "client_mgr.h": "c",
+        "resolv.h": "c"
     }
 }

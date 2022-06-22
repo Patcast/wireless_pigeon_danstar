@@ -11,48 +11,92 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
     params->host_port= myport_input;
     params->host_certificate = certificate_input;
     params->host_key = priv_key_input;
+    params->host_is_client = TRUE;
     btn_pressed_t btn;
 
     do{
-        printf("\nPress A Button:\nBTN_CONNECT=0\nBTN_ARM=1\nBTN_IGNITE=2\nBTN_RESET=3\nSHUT_DOWN=4\n");
+        printf("\nPress a Button:\nBTN_CONNECT=0\nBTN_ARM=1\nBTN_IGNITE=2\nBTN_RESET=3\nBTN_SHUT_DOWN_SERVER=4\nBTN_SHUT_DOWN_CLIENT=5\n");
         scanf("%d",(int*) &btn);
         select_state(btn,params);
+    }while(params->host_state != SHUT_DOWN);
 
-    }while(btn != BTN_SHUT_DOWN);
-    printf("\nprogram is shutting down..\n");
+    exit_client(params);  
 }
 
 int select_state(btn_pressed_t input,connection_params_t* params){
-    if (input == BTN_CONNECT)run_connect(params);
-    else if(input == BTN_SHUT_DOWN){
-        if(params->remote_ssl != NULL)close_connection(params);
-        free( params);
-    }
+
+    if (input == BTN_CONNECT) connect_with_rocket(params,CONNECT_CO,REQUESTED,0);
+    else if(input == BTN_SHUT_DOWN_SERVER) shut_down_server(params,SHUTDOWN_CO,REQUESTED,0);
 }
+int execute_command_handshake(connection_params_t* params, wireless_data_t msg_send){
+    wireless_data_t* msg_received = malloc(sizeof(connection_params_t));
+    MEMORY_ERROR(msg_received);
+
+    if (write_to_remote(params,msg_send)){
+        printf("Sending failed! Error code= %d. Error message is:'%s'\n", errno, strerror(errno));
+        return 1;
+    }
+    if (read_from_remote(params,msg_received)){
+        printf("Message reception failed!Error code= %d. Error message is:'%s'\n", errno, strerror(errno));
+        return 1;
+    }
+    
+    if ((msg_received->command!=msg_send.command)&&(msg_received->cmd_status!=ACK)){
+        printf("Error: wrong ASK packet received: commad: %d\ncmd_status: %d\n",(int)msg_received->command,(int)msg_received->cmd_status);
+        return 1;
+    }
+    free(msg_received);
+    return 0;
+}
+
+
+int connect_with_rocket(connection_params_t* params,commands_t command,status_t cmd_status,u_int32_t  instruction_code){
+    if(start_client (params)) printf("Error in the connection\n");
+    else{
+         wireless_data_t msg_send;
+        msg_send.command = command;
+        msg_send.cmd_status = cmd_status;
+        msg_send.instruction_code = instruction_code;
+        params->host_state=NOT_CONNECTED;
+        if(!execute_command_handshake(params,msg_send)){
+            params->host_state=CONNECTED;  
+            printf("Client has changed to state = %d\n", params->host_state);
+        }
+    } 
+}
+
 
 int start_client (connection_params_t* params){
     
-    if (star_host_connection(params))return 1;
-    if (connect_with_server(params->remote_ip_addr,params->host_port,params))return 1;
+    if (star_host_connection(params)){
+        printf("error starting host\n");
+        return 1;
+    }
+    if (connect_with_server(params)){
+        printf("error connecting with server\n");
+        return 1;
+    }
     ShowCerts(params->remote_ssl);
     return 0;
 }
 
-int run_connect(connection_params_t* params){
-    if(start_client (params)) printf("Error in the connection\n");
-    else{
-        params->host_state=NOT_CONNECTED;
-        wireless_data_t msg_send;
-        wireless_data_t* msg_received = malloc(sizeof(connection_params_t));
-        msg_send.command = CONNECT_CO;
-        msg_send.cmd_status = REQUESTED;
-        msg_send.instruction_code = 0;
-        if (write_to_remote(params,msg_send))printf("Sending failed! Error code= %d. Error message is:'%s'\n", errno, strerror(errno));
-        if (read_from_remote(params,msg_received)) printf("Message reception failed!Error code= %d. Error message is:'%s'\n", errno, strerror(errno));
-        if (msg_received->command==CONNECT_CO&&msg_received->cmd_status==ACK){
-            params->host_state=CONNECTED;  
+int shut_down_server(connection_params_t* params,commands_t command,status_t cmd_status,u_int32_t  instruction_code){
+    wireless_data_t msg_send;
+    msg_send.command = command;
+    msg_send.cmd_status = cmd_status;
+    msg_send.instruction_code = instruction_code;
+    if(!execute_command_handshake(params,msg_send)){
+            params->host_state=SHUT_DOWN;  
             printf("Client has changed to state = %d\n", params->host_state);
-        }else("ERROR: during not connected status\n");
-        free(msg_received);
-    } 
+    }
+    return 0;
 }
+
+int exit_client(connection_params_t* params){
+    if(params->host_state != IDLE)close_host_conn(params);
+    free( params);
+    printf("\nprogram is shutting down..\n");
+    return 0;
+}
+
+

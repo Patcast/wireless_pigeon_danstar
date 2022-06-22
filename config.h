@@ -20,10 +20,12 @@
 #include <arpa/inet.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <resolv.h>// Only for client 
 
 #include "errmacros.h"
 
-#define MAXBUF 1024
+//#define MAXBUF 1024
+#define CONNECTIONS_QUEUE 1
 
 #define TRUE             1
 #define FALSE            0
@@ -39,7 +41,7 @@ typedef struct {
     u_int32_t  instruction_code;         
 } wireless_data_t;
 
-typedef enum client_states {
+typedef enum host_states {
     IDLE =0,
     NOT_CONNECTED,
     CONNECTED, 
@@ -47,8 +49,11 @@ typedef enum client_states {
     ARM, 
     IGNITE_REQ,
     IGNITE,
-    RESET_REQ} states_t;
-    
+    RESET_REQ,
+    SHUT_DOWN
+    } states_t;
+
+
 
 typedef struct{
     SSL_CTX* host_ctx;
@@ -60,7 +65,8 @@ typedef struct{
     int host_port;
     const char* host_certificate;
     const char* host_key;
-
+    char host_is_client;
 } connection_params_t;
+
 
 #endif /* _CONFIG_H_ */
