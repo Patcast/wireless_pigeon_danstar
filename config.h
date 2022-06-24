@@ -32,7 +32,7 @@
 #define REAL_TO_STRING(s) #s
 #define TO_STRING(s) REAL_TO_STRING(s)    //force macro-expansion on s before stringify s
 
-typedef enum {CONNECT_CO=0,ARM_CO,IGNITE_CO,RESET_CO,SHUTDOWN_CO} commands_t;
+typedef enum {ZERO_CO=0,ARM_CO,IGNITE_CO,SHUTDOWN_CO} commands_t; /// TODO: Change connect for sero state and delete reset  
 typedef enum {REQUESTED=0,ACK} status_t;
 
 typedef struct {
