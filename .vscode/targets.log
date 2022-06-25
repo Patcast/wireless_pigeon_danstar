@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jun 24 17:52:47 2022
+# Make data base, printed on Sat Jun 25 23:09:13 2022
 
 # Variables
 
@@ -55,7 +55,7 @@ SNAP_DATA = /var/snap/code/99
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:44871
+JOURNAL_STREAM = 8:49412
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -83,7 +83,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 _ = /snap/code/99/usr/share/code/code
 # environment
-MANAGERPID = 1748
+MANAGERPID = 1585
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -101,7 +101,7 @@ PATH = /home/hurricane97/anaconda3/bin:/home/hurricane97/anaconda3/condabin:/hom
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/hurricane97-Lenovo-Yoga-C940-14IIL:@/tmp/.ICE-unix/1968,unix/hurricane97-Lenovo-Yoga-C940-14IIL:/tmp/.ICE-unix/1968
+SESSION_MANAGER = local/hurricane97-Lenovo-Yoga-C940-14IIL:@/tmp/.ICE-unix/1801,unix/hurricane97-Lenovo-Yoga-C940-14IIL:/tmp/.ICE-unix/1801
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -125,7 +125,7 @@ ELECTRON_RUN_AS_NODE = 1
 # makefile (from 'Makefile', line 3)
 PORT = 8538
 # environment
-INVOCATION_ID = fce755f3b7cb49ffa900b268e4821a25
+INVOCATION_ID = 75c728c08873489296b2b01a0bfe9097
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/99/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -137,7 +137,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 202628
+GIO_LAUNCHED_DESKTOP_FILE_PID = 29742
 # automatic
 %F = $(notdir $%)
 # environment
@@ -153,7 +153,7 @@ PWD = /home/hurricane97/Documents/dtu/danStar/software_ignition/tsl_com
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1928
+SSH_AGENT_PID = 1763
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -215,7 +215,7 @@ SERVER_IP = 127.0.0.1
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-6a68da36-9811-4d6d-be6f-b6d9b6338c12.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-6a98d329-fd04-4839-b829-19c6ccfecfbd.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -290,6 +290,7 @@ CONDA_PYTHON_EXE = /home/hurricane97/anaconda3/bin/python
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # automatic
 ^F = $(notdir $^)
+ 
 # default
 SUFFIXES := 
 # makefile (from 'Makefile', line 1)
@@ -313,7 +314,7 @@ LC_ADDRESS = en_GB.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 202676
+VSCODE_PID = 29790
 # environment
 _CE_CONDA = 
 # variable set hash-table stats:
@@ -325,7 +326,7 @@ _CE_CONDA =
 
 # Directories
 
-# . (device 66306, inode 4849713): 20 files, no impossibilities.
+# . (device 66308, inode 4849713): 20 files, no impossibilities.
 
 # 20 files, no impossibilities in 1 directories.
 
@@ -412,7 +413,6 @@ debug_server:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
- 
 #  Last modified 2022-06-24 17:52:46.104704926
 #  File has been updated.
 #  Successfully updated.
@@ -501,6 +501,6 @@ server_pigeon/server_tls.c:
 # strcache performance: lookups = 48 / hit rate = 27%
 # hash-table stats:
 # Load=35/8192=0%, Rehash=0, Collisions=1/48=2%
-# Finished Make data base on Fri Jun 24 17:52:47 2022
+# Finished Make data base on Sat Jun 25 23:09:13 2022
 
  

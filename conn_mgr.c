@@ -65,7 +65,8 @@ int start_port_server (connection_params_t* params){
 int connect_with_client(connection_params_t* params){
     socklen_t len = sizeof(struct sockaddr);
     struct sockaddr_in their_addr;
-    
+    params->host_state = NOT_CONNECTED;
+
     printf("starting client communication: Status %d\n",params->host_state);
     if ((params->remote_fd = accept(params->host_fd, (struct sockaddr *) &their_addr, &len))== -1) {
             perror("Error accepting socket");
@@ -131,10 +132,11 @@ int ShowCerts(SSL * ssl)
         printf("Issuer: %s\n", line);
         free(line);
         X509_free(cert);
+        return 0; 
     } else{
         printf("No certificate information!\n");
         return 1;
-    }     
+    }   
 }
 
 
@@ -157,26 +159,42 @@ int write_to_remote(connection_params_t* params,wireless_data_t msg)
 }
 
 int read_from_remote(connection_params_t* params, wireless_data_t* msg_received){
-    int bytes;
+    int bytes1 = sizeof(msg_received->command);
+    int bytes2 = sizeof(msg_received->cmd_status);
+    int bytes3 = sizeof(msg_received->instruction_code);
 
     printf("\n------------------\n");
-    bytes = sizeof(msg_received->command);
-    if( SSL_read(params->remote_ssl, (void *) &(msg_received->command),bytes)<=0)return 1;
-       
-    bytes = sizeof(msg_received->cmd_status);
-    if( SSL_read(params->remote_ssl, (void *) &(msg_received->cmd_status), bytes)<=0 ) return 1;
 
-    bytes = sizeof(msg_received->instruction_code);
-    if( SSL_read(params->remote_ssl, (void *) &(msg_received->instruction_code), bytes)<0 ) return 1;
-    else printf("\ncommand: %d\ncommand status: %d\ninstruction code: %d\n\n",msg_received->command,msg_received->cmd_status,msg_received->instruction_code);
-    return 0;
+    bytes1 = SSL_read(params->remote_ssl, (void *) &(msg_received->command),bytes1);    
+    bytes2 = SSL_read(params->remote_ssl, (void *) &(msg_received->cmd_status), bytes2);
+    bytes3 =  SSL_read(params->remote_ssl, (void *) &(msg_received->instruction_code), bytes3);
+
+
+    if((bytes1 <=0)){
+         params->host_state = NOT_CONNECTED;
+            if(SSL_get_error(params->remote_ssl,bytes1) ==SSL_ERROR_ZERO_RETURN){
+                printf("Client closed connection.\n");
+                return 1;
+            }
+            else{
+                printf("Error receiving message from client.\n");
+                return 1;
+            }  
+    }
+    else {
+        printf("\ncommand: %d\ncommand status: %d\ninstruction code: %d\n\n",
+        msg_received->command,
+        msg_received->cmd_status,
+        msg_received->instruction_code);
+        return 0;
+    }
 }
 int close_remote_conn(connection_params_t* params){
     printf("Attempting to close client: Status %d\n", params->host_state);
-    if (params->host_state == CONNECTED)SSL_shutdown(params->remote_ssl);
+    if (params->host_state == ZERO)SSL_shutdown(params->remote_ssl);
     close(params->remote_fd);//TODO: Check that  this is close properly. And only when needed.
     SSL_free(params->remote_ssl);
-    params->host_state= NOT_CONNECTED;
+    ///params->host_state= NOT_CONNECTED;
     printf("Connection with client closed: Status %d.\n", params->host_state);
     return 0;
 }

@@ -42,13 +42,19 @@ typedef struct {
 } wireless_data_t;
 
 typedef enum host_states {
-    IDLE =0,
-    NOT_CONNECTED,
-    CONNECTED, 
+    //IDLE =0, 
+    // SERVER: Server is running but, port is not open, might be unecessary???
+    NOT_CONNECTED=0, 
+    // SERVER: Port is open, but not client connected 
+    // CLIENT: Starting state
+    ZERO,  
+    // SERVER: Client connected, GPIO set to zero
     ARM_REQ, 
-    ARM, 
+    ARM,  
+    // SERVER: Client connected, half GPIO set 
     IGNITE_REQ,
-    IGNITE,
+    IGNITE, 
+    // SERVER Client connected, all GPIO set 
     RESET_REQ,
     SHUT_DOWN
     } states_t;
@@ -70,3 +76,5 @@ typedef struct{
 
 
 #endif /* _CONFIG_H_ */
+
+
