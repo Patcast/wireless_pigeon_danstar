@@ -1,6 +1,6 @@
 #include "conn_mgr.h"
 
-typedef enum buttons_cmd{BTN_ZERO=0, BTN_ARM, BTN_IGNITE,BTN_SHUT_DOWN_SERVER,BTN_SHUT_DOWN_CLIENT} btn_pressed_t;
+typedef enum buttons_cmd{BTN_ZERO=0, BTN_ARM, BTN_IGNITE,BTN_SHUT_DOWN_SERVER,BTN_SHUT_DOWN_CLIENT} btn_pressed_t; //TODO: Add connect button, also 
 
 int run_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input);
 int connect_with_rocket(connection_params_t* params,commands_t command,status_t cmd_status,u_int32_t  instruction_code);

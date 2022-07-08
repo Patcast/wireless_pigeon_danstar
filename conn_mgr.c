@@ -14,11 +14,13 @@ int star_host_connection (connection_params_t* params){
         ERR_print_errors_fp(stdout);
         return 1;
     }
+
     SSL_CTX_set_verify(params->host_ctx, SSL_VERIFY_PEER|SSL_VERIFY_FAIL_IF_NO_PEER_CERT, NULL);
     if (SSL_CTX_load_verify_locations(params->host_ctx, "keys/ca.crt",NULL)<=0){ 
         ERR_print_errors_fp(stdout);
         return 1;
     }
+    // TODO: Add else if to remove returns 
     if (SSL_CTX_use_certificate_file(params->host_ctx,params->host_certificate, SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stdout);
         return 1;
@@ -51,7 +53,7 @@ int start_port_server (connection_params_t* params){
     
     if (bind(params->host_fd, (struct sockaddr *) &my_addr, sizeof(struct sockaddr))== -1) {
         perror("error on bind");
-        exit(1);
+        exit(1); //TODO: go back to before connect. 
     } else printf("binded\n");
 
     if (listen(params->host_fd, CONNECTIONS_QUEUE) == -1) {

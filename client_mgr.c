@@ -16,6 +16,8 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
     params->host_is_client = TRUE;
     btn_pressed_t btn;
 
+    //TODO: wait until btn connected is pressed 
+
     connect_with_rocket(params,ZERO_CO,REQUESTED,0);
 
     do{
@@ -28,6 +30,7 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
 
 int select_state(btn_pressed_t input,connection_params_t* params){
 
+    /// TODO: switch statement 
     if(input == BTN_SHUT_DOWN_SERVER) execute_command(params,SHUTDOWN_CO,REQUESTED,0);
     else if (input == BTN_SHUT_DOWN_CLIENT) params->host_state = SHUT_DOWN;
     else if ((input == BTN_ZERO)||(params->host_state == IGNITE)) execute_command(params,ZERO_CO,REQUESTED,0); 
@@ -60,12 +63,12 @@ int connect_with_rocket(connection_params_t* params,commands_t command,status_t 
 }
 
 
-int execute_command(connection_params_t* params,commands_t command,status_t cmd_status,u_int32_t  instruction_code){
+int execute_command(connection_params_t* params,commands_t command,status_t cmd_status,uint32_t  instruction_code){
     wireless_data_t msg_send;
     msg_send.command = command;
     msg_send.cmd_status = cmd_status;
     msg_send.instruction_code = instruction_code;
-
+    //TODO: swtich()
     if(!command_handshake(params,msg_send)){
         if(msg_send.command==ZERO_CO){
             params->host_state=ZERO;  
@@ -106,7 +109,9 @@ int command_handshake(connection_params_t* params, wireless_data_t msg_send){
         printf("Sending failed! Error code= %d. Error message is:'%s'\n", errno, strerror(errno));
         return 1;
     }
-    if (read_from_remote(params,msg_received)){
+    if (read_from_remote(params,msg_received)!= 0){ 
+        //TODO: Add to all if statements.
+        //BUG use else if. Handle better the sequances
         printf("Message reception failed!Error code= %d. Error message is:'%s'\n", errno, strerror(errno));
         return 1;
     }
@@ -115,13 +120,16 @@ int command_handshake(connection_params_t* params, wireless_data_t msg_send){
         printf("Error: wrong ASK packet received: commad: %d\ncmd_status: %d\n",(int)msg_received->command,(int)msg_received->cmd_status);
         return 1;
     }
+    //TODO: free if error too
     free(msg_received);
     return 0;
 }
 
 
 int exit_client(connection_params_t* params){
-    if(params->host_state != NOT_CONNECTED)close_host_conn(params);
+    if(params->host_state != NOT_CONNECTED){ //TODO: add curly braces to if staments.
+        close_host_conn(params);
+    }
     free( params);
     printf("\nprogram is shutting down..\n");
     return 0;

@@ -13,23 +13,22 @@ int run_server(int myport_input, const char* certificate_input, const char* priv
     params->host_is_client = FALSE;
    
     ///Stars openssl library and allow server to receive new connections 
-    if (star_host_connection(params))return 1;
-    if (start_port_server(params))return 1;
-
-    do{
-        /// Connects with in coming client
+    if ((star_host_connection(params)==0)&&(start_port_server(params)==0)) {//TODO: is the error printed?
+        do{
         //TODO: SET GPIO to zero here
-         if (connect_with_client(params))printf("Attempt to connect with client fail");
-         else{
-            params->host_state = ZERO;
-            ShowCerts(params->remote_ssl);
-            ///TODO: SET GPIO to zero.
-            select_state_server(params);
-            close_remote_conn(params);
-         }
-    }while(params->host_state !=SHUT_DOWN);
-    close_server(params);
-    return 0;
+            if (connect_with_client(params))printf("Attempt to connect with client fail");
+            else{
+                params->host_state = ZERO;
+                ShowCerts(params->remote_ssl);
+                ///TODO: SET GPIO to zero.
+                select_state_server(params);
+                close_remote_conn(params);
+            }
+        }while(params->host_state !=SHUT_DOWN);
+        close_server(params);
+        return 0;
+    }
+    return 1;
 }
 
 int select_state_server(connection_params_t* params){
@@ -39,6 +38,7 @@ int select_state_server(connection_params_t* params){
 
     do{
         //printf("Server is reading\n");
+        //TODO: use switch statement.
         if(read_from_remote(params, msg_received))break;
         else{
             if (msg_received->command == SHUTDOWN_CO)run_shut_down_server(params,msg_received);
