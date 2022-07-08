@@ -1,0 +1,49 @@
+/*
+ * This is an overlay for the beagle bone black in the launch rail.
+ * The purpose is to set up the BBB to use the gpio of P8 for the ARM and IGNITE signal.
+ * Author: Patricio Castillo Calderon
+ */
+
+/dts-v1/;
+/plugin/;
+
+/{
+    compatible = "ti,beaglebone", "ti,beaglebone-black";
+    part_number = "BS_PINMODE_ROCKET";
+
+    fragment@0 {
+        target = <&am33xx_pinmux>;
+        __overlay__ {
+            bs_pinmode_rocket: pinmux_bs_pinmode_rocket {
+                pinctrl-single,pins = <
+			0x0e0 0x07 /* P8_27 */
+                        0x0e8 0x07 /* P8_28 */
+                        0x0e4 0x07 /* P8_29 */
+                        0x0ec 0x07 /* P8_30 */
+                        0x0d8 0x07 /* P8_31 */
+                        0x0dc 0x07 /* P8_32 */
+                        0x0d4 0x07 /* P8_33 */
+                        0x0cc 0x07 /* P8_34 */
+                        0x0d0 0x07 /* P8_35 */
+                        0x0c8 0x07 /* P8_36 */
+                        0x0c0 0x07 /* P8_37 */
+                        0x0c4 0x07 /* P8_38 */
+                        0x0b8 0x07 /* P8_39 */
+                >;
+            };
+        };
+    };
+
+    fragment@1 {
+        target = <&ocp>;
+        __overlay__ {
+            bs_pinmode_rocket_pinmux {
+                compatible = "bone-pinmux-helper";
+                status = "okay";
+                pinctrl-names = "default";
+                pinctrl-0 = <&bs_pinmode_rocket>;
+            };
+        };
+    };
+};
+
