@@ -213,10 +213,11 @@ int close_host_conn(connection_params_t* params){
     close(params->host_fd);
     SSL_CTX_free(params->host_ctx);
     printf("device is disconnected: Status %d\n",params->host_state);
-    //ERR_remove_state(0); Commented as it casued an error, claming be depreciated.
-    ERR_free_strings();
-    EVP_cleanup();
-    CRYPTO_cleanup_all_ex_data();
-    sk_SSL_COMP_free(SSL_COMP_get_compression_methods());
+    //ERR_remove_state(0); Commented as it casued an error, claming be depreciated. Newer version of openssl, should do it by itself.
+    //ERR_remove_thread_state(NULL);
+    //ERR_free_strings();
+    //EVP_cleanup();
+    //CRYPTO_cleanup_all_ex_data();
+    //sk_SSL_COMP_free(SSL_COMP_get_compression_methods());
     return 0;
 }
