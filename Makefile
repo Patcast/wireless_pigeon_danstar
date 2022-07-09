@@ -81,7 +81,7 @@ valgrind_server:
 	@gcc -g  $(SERVER_COMPILING) 
 	@echo -e '*** Running VALGRIND TEST ***'
 	@echo -e '*************************'
-	@valgrind -s --leak-check=full --show-leak-kinds=all ./build/server_test $(SERVER_PARAM)
+	@valgrind  --show-leak-kinds=all ./build/server_test $(SERVER_PARAM)
 
 valgrind_client: 
 	@echo -e '\n*******************************'
