@@ -1,7 +1,7 @@
 #include "server_mgr.h"
 
 
-int main(int argc, char **argv) { /// SET UP SERVER 
+int main(int argc, char **argv) { 
    unsigned int myport, res;
 
     if (argv[1])

@@ -17,11 +17,13 @@ int star_host_connection (connection_params_t* params){
 
     SSL_CTX_set_verify(params->host_ctx, SSL_VERIFY_PEER|SSL_VERIFY_FAIL_IF_NO_PEER_CERT, NULL);
     if (SSL_CTX_load_verify_locations(params->host_ctx, "keys/ca.crt",NULL)<=0){ 
+        printf("error on root");
         ERR_print_errors_fp(stdout);
         return 1;
     }
     // TODO: Add else if to remove returns 
     if (SSL_CTX_use_certificate_file(params->host_ctx,params->host_certificate, SSL_FILETYPE_PEM) <= 0) {
+        printf("error on client cert");
         ERR_print_errors_fp(stdout);
         return 1;
     }
@@ -211,7 +213,7 @@ int close_host_conn(connection_params_t* params){
     close(params->host_fd);
     SSL_CTX_free(params->host_ctx);
     printf("device is disconnected: Status %d\n",params->host_state);
-    ERR_remove_state(0);
+    //ERR_remove_state(0); Commented as it casued an error, claming be depreciated.
     ERR_free_strings();
     EVP_cleanup();
     CRYPTO_cleanup_all_ex_data();

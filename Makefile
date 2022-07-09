@@ -1,4 +1,4 @@
-FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
+FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/lib/arm-linux-gnueabihf -lssl -lcrypto
 SERVER_IP = 127.0.0.1
 PORT = 8537
 SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure
@@ -14,7 +14,7 @@ server:
 	@mkdir -p build
 	@gcc  $(SERVER_COMPILING)
 	@echo -e '\n*************************'
-	@echo -e '*** Running UNIT TEST ***'
+	@echo -e '*** Running SERVER UNIT TEST ***'
 	@echo -e '*************************'
 	@sudo ./build/server_test $(SERVER_PARAM)
 
@@ -25,7 +25,7 @@ client:
 	@mkdir -p build
 	@gcc  $(CLIENT_COMPILING)
 	@echo -e '\n*************************'
-	@echo -e '*** Running UNIT TEST ***'
+	@echo -e '*** Running CLIENT UNIT TEST ***'
 	@echo -e '*************************'
 	@sudo ./build/client_test $(CLIENT_PARAM) 
 
@@ -36,7 +36,7 @@ fake_client:
 	@mkdir -p build
 	@gcc  $(CLIENT_COMPILING)
 	@echo -e '\n*************************'
-	@echo -e '*** Running UNIT TEST ***'
+	@echo -e '*** Running FAKE CLIENT UNIT TEST ***'
 	@echo -e '*************************'
 	@sudo ./build/client_test $(FAKE_CLIENT) 
 
