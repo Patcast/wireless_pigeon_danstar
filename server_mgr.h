@@ -7,6 +7,22 @@
 #define FLAG_SIGNAL_5 0x10
 #define FLAG_SIGNAL_6 0x20
 
+#define PIN_ARM_1 86
+#define PIN_ARM_2 87
+#define PIN_ARM_3 10
+#define PIN_ARM_4 9
+#define PIN_ARM_5 8
+#define PIN_ARM_6 78
+
+#define PIN_IGN_1 88
+#define PIN_IGN_2 89
+#define PIN_IGN_3 11
+#define PIN_IGN_4 81
+#define PIN_IGN_5 80
+#define PIN_IGN_6 79
+
+
+
 
 
 int run_server(int myport_input, const char* certificate_input, const char* priv_key_input);
@@ -19,4 +35,8 @@ int run_shut_down_server(connection_params_t* params,wireless_data_t* msg_receiv
 int set_gpio_arm(u_int8_t arm_signal);
 /* Extracts the each bit of the ign_signal and sets the gpio of the embedded device accordingly.*/
 int set_gpio_ign(u_int8_t ign_signal);
+/* Set the pins on the server to be outputs*/
+int start_gpio();
+int reset_gpio();
+int close_gpio();
 int close_server(connection_params_t* params);

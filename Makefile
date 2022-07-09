@@ -6,13 +6,14 @@ CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.
 FAKE_CLIENT = $(SERVER_IP) $(PORT) fake/fake_client.crt fake/fake_client_rsa_private.pem.unsecure
 SERVER_COMPILING = server_mgr.c server_main.c conn_mgr.c -o build/server_test $(FLAGS)
 CLIENT_COMPILING = conn_mgr.c client_main.c client_mgr.c -o build/client_test $(FLAGS)
+GPI0_COMPILING =  gpio_handler.c 
 
 server: 
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  $(SERVER_COMPILING)
+	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING)
 	@echo -e '\n*************************'
 	@echo -e '*** Running SERVER UNIT TEST ***'
 	@echo -e '*************************'

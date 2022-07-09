@@ -1,6 +1,9 @@
 #include "server_mgr.h"
 //TODO: When SD command is received. close down connection. 
 
+//unsigned int PIN_ARM_1 = 86;
+
+// BUG: PRevent cancel IGNITE signal due to debouncing. Redraw diagram.
 
 int run_server(int myport_input, const char* certificate_input, const char* priv_key_input){
 
@@ -11,11 +14,12 @@ int run_server(int myport_input, const char* certificate_input, const char* priv
     params->host_certificate = certificate_input;
     params->host_key = priv_key_input;
     params->host_is_client = FALSE;
-   
+    
     ///Stars openssl library and allow server to receive new connections 
     if ((star_host_connection(params)==0)&&(start_port_server(params)==0)) {//TODO: is the error printed?
+        start_gpio();
         do{
-        //TODO: SET GPIO to zero here
+            
             if (connect_with_client(params))printf("Attempt to connect with client fail");
             else{
                 params->host_state = ZERO;
@@ -26,9 +30,11 @@ int run_server(int myport_input, const char* certificate_input, const char* priv
             }
         }while(params->host_state !=SHUT_DOWN);
         close_server(params);
+        close_gpio();
         return 0;
     }
     return 1;
+    
 }
 
 int select_state_server(connection_params_t* params){
@@ -64,6 +70,7 @@ int run_zero(connection_params_t* params,wireless_data_t* msg_received, char* er
     if(error!=NULL)printf("%s", error);
     params->host_state = ZERO;
     msg_received->cmd_status=ACK;
+    reset_gpio();
     write_to_remote( params, *msg_received);
     return 0;
 }
@@ -90,21 +97,22 @@ int run_ignite(connection_params_t* params,wireless_data_t* msg_received){
 }
 
 int set_gpio_arm(u_int8_t arm_signal){
+    
     if(arm_signal!=0){
-        printf("ARM signal:\n");
-        unsigned char bit;
+        unsigned int bit;
+
         bit = (arm_signal & FLAG_SIGNAL_6) ? 1 : 0;
-        printf("%d",bit);
+        gpio_set_value(PIN_ARM_1, bit);
         bit = (arm_signal & FLAG_SIGNAL_5) ? 1 : 0;
-        printf("%d",bit);
+        gpio_set_value(PIN_ARM_2, bit);
         bit = (arm_signal & FLAG_SIGNAL_4) ? 1 : 0;
-        printf("%d",bit);
+        gpio_set_value(PIN_ARM_3, bit);
         bit = (arm_signal & FLAG_SIGNAL_3) ? 1 : 0;
-        printf("%d",bit);
+        gpio_set_value(PIN_ARM_4, bit);
         bit = (arm_signal & FLAG_SIGNAL_2) ? 1 : 0;
-        printf("%d",bit);
+        gpio_set_value(PIN_ARM_5, bit);
         bit = (arm_signal & FLAG_SIGNAL_1) ? 1 : 0;
-        printf("%d\n\n",bit);
+        gpio_set_value(PIN_ARM_6, bit);
     }
     return 0;
 }
@@ -113,20 +121,83 @@ int set_gpio_ign(u_int8_t ign_signal){
         printf("IGN signal:\n");
         unsigned char bit;
         bit = (ign_signal & FLAG_SIGNAL_6) ? 1 : 0;
-        printf("%d",bit);
+        gpio_set_value(PIN_IGN_6, bit);
         bit = (ign_signal & FLAG_SIGNAL_5) ? 1 : 0;
-        printf("%d",bit);
+        gpio_set_value(PIN_IGN_5, bit);
         bit = (ign_signal & FLAG_SIGNAL_4) ? 1 : 0;
-        printf("%d",bit);
+        gpio_set_value(PIN_IGN_4, bit);
         bit = (ign_signal & FLAG_SIGNAL_3) ? 1 : 0;
-        printf("%d",bit);
+        gpio_set_value(PIN_IGN_3, bit);
         bit = (ign_signal & FLAG_SIGNAL_2) ? 1 : 0;
-        printf("%d",bit);
+        gpio_set_value(PIN_IGN_2, bit);
         bit = (ign_signal & FLAG_SIGNAL_1) ? 1 : 0;
-        printf("%d\n\n",bit);
+        gpio_set_value(PIN_IGN_1, bit);
         return 0;
     }
     return 1;
+}
+int start_gpio(){
+
+    // BUG : If gpio files already exist, this will crash. 
+    printf("Starting GPIO...\n");
+    gpio_export(PIN_ARM_1);  
+    gpio_set_dir(PIN_ARM_1, OUTPUT_PIN); 
+    gpio_export(PIN_ARM_2);  
+    gpio_set_dir(PIN_ARM_2, OUTPUT_PIN);
+    gpio_export(PIN_ARM_3);  
+    gpio_set_dir(PIN_ARM_3, OUTPUT_PIN);
+    gpio_export(PIN_ARM_4);  
+    gpio_set_dir(PIN_ARM_4, OUTPUT_PIN);
+    gpio_export(PIN_ARM_5);  
+    gpio_set_dir(PIN_ARM_5, OUTPUT_PIN);
+    gpio_export(PIN_ARM_6);  
+    gpio_set_dir(PIN_ARM_6, OUTPUT_PIN);
+
+    gpio_export(PIN_IGN_1);  
+    gpio_set_dir(PIN_IGN_1, OUTPUT_PIN); 
+    gpio_export(PIN_IGN_2);  
+    gpio_set_dir(PIN_IGN_2, OUTPUT_PIN);
+    gpio_export(PIN_IGN_3);  
+    gpio_set_dir(PIN_IGN_3, OUTPUT_PIN);
+    gpio_export(PIN_IGN_4);  
+    gpio_set_dir(PIN_IGN_4, OUTPUT_PIN);
+    gpio_export(PIN_IGN_5);  
+    gpio_set_dir(PIN_IGN_5, OUTPUT_PIN);
+    gpio_export(PIN_IGN_6);  
+    gpio_set_dir(PIN_IGN_6, OUTPUT_PIN);
+    return 0;
+}
+
+int reset_gpio(){
+    gpio_set_value(PIN_ARM_1, LOW);
+    gpio_set_value(PIN_ARM_2, LOW);
+    gpio_set_value(PIN_ARM_3, LOW);
+    gpio_set_value(PIN_ARM_4, LOW);
+    gpio_set_value(PIN_ARM_5, LOW);
+    gpio_set_value(PIN_ARM_6, LOW);
+
+    gpio_set_value(PIN_IGN_1, LOW);
+    gpio_set_value(PIN_IGN_2, LOW);
+    gpio_set_value(PIN_IGN_3, LOW);
+    gpio_set_value(PIN_IGN_4, LOW);
+    gpio_set_value(PIN_IGN_5, LOW);
+    gpio_set_value(PIN_IGN_6, LOW);
+}
+
+int close_gpio(){
+    gpio_unexport(PIN_ARM_1);
+    gpio_unexport(PIN_ARM_2);
+    gpio_unexport(PIN_ARM_3);
+    gpio_unexport(PIN_ARM_4);
+    gpio_unexport(PIN_ARM_5);
+    gpio_unexport(PIN_ARM_6);
+
+    gpio_unexport(PIN_IGN_1);
+    gpio_unexport(PIN_IGN_2);
+    gpio_unexport(PIN_IGN_3);
+    gpio_unexport(PIN_IGN_4);
+    gpio_unexport(PIN_IGN_5);
+    gpio_unexport(PIN_IGN_6);
 }
 
 int close_server(connection_params_t* params){

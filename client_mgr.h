@@ -1,6 +1,6 @@
 #include "conn_mgr.h"
-#define ARM_SIGNAL 0x35
-#define IGNITE_SIGNAL 0x15
+#define ARM_SIGNAL 0xFF
+#define IGNITE_SIGNAL 0xFF
 
 typedef enum buttons_cmd{BTN_ZERO=0, BTN_ARM, BTN_IGNITE,BTN_SHUT_DOWN_SERVER,BTN_SHUT_DOWN_CLIENT} btn_pressed_t; //TODO: Add connect button, also 
 
