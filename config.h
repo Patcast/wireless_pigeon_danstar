@@ -38,7 +38,7 @@ typedef enum {REQUESTED=0,ACK} status_t;
 typedef struct {
     commands_t command;         
     status_t cmd_status;   
-    u_int32_t  instruction_code;         
+    u_int8_t  instruction_code;         
 } wireless_data_t;
 
 typedef enum host_states {

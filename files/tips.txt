@@ -1,0 +1,11 @@
+<inttypes.h>
+
+#define ARM_FLAG1 0x10 /// Bit mask 
+
+typedef uint8_t byte_t;
+byte_t byte = 0xB9;
+
+
+if (byte & ARM_FLAG1){  // This is appling a bit mask on the byte, so if a certain byte is 1 it executes. 
+        set_gpio();
+}

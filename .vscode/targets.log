@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Jul  9 19:07:32 2022
+# Make data base, printed on Sat Jul  9 19:42:54 2022
 
 # Variables
 
@@ -115,7 +117,7 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # makefile (from 'Makefile', line 3)
-PORT = 8538
+PORT = 8537
 # environment
 INVOCATION_ID = 4f3833344e2e455cb360f31730fbf45b
 # environment
@@ -277,9 +279,6 @@ CONDA_PYTHON_EXE = /home/hurricane97/anaconda3/bin/python
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # automatic
- 
-make: *** No rule to make target 'all'.  Stop.
-
 ^F = $(notdir $^)
 # default
 SUFFIXES := 
@@ -323,6 +322,7 @@ _CE_CONDA =
 # Implicit Rules
 
 # No implicit rules.
+ 
 
 # Files
 
@@ -403,7 +403,7 @@ debug_server:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-24 17:52:46.104704926
+#  Last modified 2022-07-09 19:42:14.985420379
 #  File has been updated.
 #  Successfully updated.
 
@@ -491,6 +491,6 @@ server_pigeon/server_tls.c:
 # strcache performance: lookups = 50 / hit rate = 26%
 # hash-table stats:
 # Load=37/8192=0%, Rehash=0, Collisions=1/50=2%
-# Finished Make data base on Sat Jul  9 19:07:32 2022
+# Finished Make data base on Sat Jul  9 19:42:54 2022
 
  

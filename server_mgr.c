@@ -71,6 +71,7 @@ int run_zero(connection_params_t* params,wireless_data_t* msg_received, char* er
 int run_arm(connection_params_t* params,wireless_data_t* msg_received){
     params->host_state = ARM;
     msg_received->cmd_status=ACK;
+    set_gpio_arm(msg_received->instruction_code);
     write_to_remote( params, *msg_received);
     return 0;
 }
@@ -78,14 +79,54 @@ int run_ignite(connection_params_t* params,wireless_data_t* msg_received){
     if ((params->host_state == ARM )){
         params->host_state = IGNITE;
         msg_received->cmd_status=ACK;
-        
+        set_gpio_ign(msg_received->instruction_code);
         write_to_remote( params, *msg_received);
     }
     else {
-        msg_received->instruction_code= 6666;
+        msg_received->instruction_code= 0xFF;
         run_zero(params,msg_received,"Please send Arm, before igniting");
     }
     return 0;
+}
+
+int set_gpio_arm(u_int8_t arm_signal){
+    if(arm_signal!=0){
+        printf("ARM signal:\n");
+        unsigned char bit;
+        bit = (arm_signal & FLAG_SIGNAL_6) ? 1 : 0;
+        printf("%d",bit);
+        bit = (arm_signal & FLAG_SIGNAL_5) ? 1 : 0;
+        printf("%d",bit);
+        bit = (arm_signal & FLAG_SIGNAL_4) ? 1 : 0;
+        printf("%d",bit);
+        bit = (arm_signal & FLAG_SIGNAL_3) ? 1 : 0;
+        printf("%d",bit);
+        bit = (arm_signal & FLAG_SIGNAL_2) ? 1 : 0;
+        printf("%d",bit);
+        bit = (arm_signal & FLAG_SIGNAL_1) ? 1 : 0;
+        printf("%d\n\n",bit);
+    }
+    return 0;
+}
+int set_gpio_ign(u_int8_t ign_signal){
+    if(ign_signal!=0){
+        printf("IGN signal:\n");
+        unsigned char bit;
+        bit = (ign_signal & FLAG_SIGNAL_6) ? 1 : 0;
+        printf("%d",bit);
+        bit = (ign_signal & FLAG_SIGNAL_5) ? 1 : 0;
+        printf("%d",bit);
+        bit = (ign_signal & FLAG_SIGNAL_4) ? 1 : 0;
+        printf("%d",bit);
+        bit = (ign_signal & FLAG_SIGNAL_3) ? 1 : 0;
+        printf("%d",bit);
+        bit = (ign_signal & FLAG_SIGNAL_2) ? 1 : 0;
+        printf("%d",bit);
+        bit = (ign_signal & FLAG_SIGNAL_1) ? 1 : 0;
+        printf("%d\n\n",bit);
+        return 0;
+    }
+    return 1;
 }
 
 int close_server(connection_params_t* params){
