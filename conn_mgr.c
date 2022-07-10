@@ -99,12 +99,11 @@ int connect_with_server(connection_params_t* params){
     dest.sin_port = htons(params->host_port);
     if (inet_aton(params->remote_ip_addr, (struct in_addr *) &dest.sin_addr.s_addr) == 0) {
         perror(params->remote_ip_addr);
-        exit(errno); //TODO: handle exit properly.
     }
-    printf("address created\n");
-    if (connect(params->host_fd, (struct sockaddr *) &dest, sizeof(dest)) != 0) {
+    else if (connect(params->host_fd, (struct sockaddr *) &dest, sizeof(dest)) != 0) {
         perror("Connect ");
-        exit(errno);
+        //exit(errno);
+        return 1;
     }
     params->remote_ssl = SSL_new(params->host_ctx);
     SSL_set_fd(params->remote_ssl, params->host_fd );
