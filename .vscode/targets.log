@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Jul  9 19:42:54 2022
+# Make data base, printed on Sun Jul 10 18:48:34 2022
 
 # Variables
 
@@ -53,7 +51,7 @@ SNAP_DATA = /var/snap/code/100
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:45798
+JOURNAL_STREAM = 8:50321
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -79,7 +77,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 _ = /snap/code/100/usr/share/code/code
 # environment
-MANAGERPID = 1595
+MANAGERPID = 1591
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -97,7 +95,7 @@ PATH = /home/hurricane97/anaconda3/bin:/home/hurricane97/anaconda3/condabin:/hom
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/hurricane97-Lenovo-Yoga-C940-14IIL:@/tmp/.ICE-unix/1818,unix/hurricane97-Lenovo-Yoga-C940-14IIL:/tmp/.ICE-unix/1818
+SESSION_MANAGER = local/hurricane97-Lenovo-Yoga-C940-14IIL:@/tmp/.ICE-unix/1807,unix/hurricane97-Lenovo-Yoga-C940-14IIL:/tmp/.ICE-unix/1807
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -119,7 +117,7 @@ ELECTRON_RUN_AS_NODE = 1
 # makefile (from 'Makefile', line 3)
 PORT = 8537
 # environment
-INVOCATION_ID = 4f3833344e2e455cb360f31730fbf45b
+INVOCATION_ID = c5a911c3a8754acfa68afc92fd0f5d7b
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/100/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -131,7 +129,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 101121
+GIO_LAUNCHED_DESKTOP_FILE_PID = 8578
 # automatic
 %F = $(notdir $%)
 # environment
@@ -145,7 +143,7 @@ PWD = /home/hurricane97/Documents/dtu/danStar/software_ignition/tsl_com
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1779
+SSH_AGENT_PID = 1769
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -256,6 +254,8 @@ LC_PAPER = en_GB.UTF-8
 LC_IDENTIFICATION = en_GB.UTF-8
 # environment
 QT_ACCESSIBILITY = 1
+# makefile (from 'Makefile', line 9)
+GPI0_COMPILING = gpio_handler.c 
 # default
 MAKEFILES := 
 # makefile (from 'Makefile', line 6)
@@ -291,6 +291,9 @@ _CE_M =
 # environment
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
+ 
+make: *** No rule to make target 'all'.  Stop.
+
 WINDOWPATH = 2
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
@@ -303,11 +306,11 @@ LC_ADDRESS = en_GB.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 101167
+VSCODE_PID = 8628
 # environment
 _CE_CONDA = 
 # variable set hash-table stats:
-# Load=147/1024=14%, Rehash=0, Collisions=24/172=14%
+# Load=148/1024=14%, Rehash=0, Collisions=24/173=14%
 
 # Pattern-specific Variable Values
 
@@ -315,14 +318,13 @@ _CE_CONDA =
 
 # Directories
 
-# . (device 66306, inode 4849713): 22 files, no impossibilities.
+# . (device 66306, inode 4849713): 25 files, no impossibilities.
 
-# 22 files, no impossibilities in 1 directories.
+# 25 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 # No implicit rules.
- 
 
 # Files
 
@@ -330,7 +332,7 @@ client_example:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 56):
+#  recipe to execute (from 'Makefile', line 57):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -352,14 +354,14 @@ client:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 22):
+#  recipe to execute (from 'Makefile', line 23):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
 	@gcc  $(CLIENT_COMPILING)
 	@echo -e '\n*************************'
-	@echo -e '*** Running UNIT TEST ***'
+	@echo -e '*** Running CLIENT UNIT TEST ***'
 	@echo -e '*************************'
 	@sudo ./build/client_test $(CLIENT_PARAM) 
 
@@ -367,14 +369,14 @@ zip:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 98):
+#  recipe to execute (from 'Makefile', line 99):
 	zip lab7_ex2.zip connmgr.c  errmacros.h connmgr.h config.h lib/dplist.c lib/dplist.h lib/tcpsock.c lib/tcpsock.h
 
 server_example: server_pigeon/server_tls.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 45):
+#  recipe to execute (from 'Makefile', line 46):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -389,7 +391,7 @@ debug_server:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 67):
+#  recipe to execute (from 'Makefile', line 68):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -403,7 +405,7 @@ debug_server:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-09 19:42:14.985420379
+#  Last modified 2022-07-10 01:17:01.453058862
 #  File has been updated.
 #  Successfully updated.
 
@@ -411,14 +413,14 @@ server:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 11):
+#  recipe to execute (from 'Makefile', line 12):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  $(SERVER_COMPILING)
+	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING)
 	@echo -e '\n*************************'
-	@echo -e '*** Running UNIT TEST ***'
+	@echo -e '*** Running SERVER UNIT TEST ***'
 	@echo -e '*************************'
 	@sudo ./build/server_test $(SERVER_PARAM)
 
@@ -426,14 +428,14 @@ fake_client:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 33):
+#  recipe to execute (from 'Makefile', line 34):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
 	@gcc  $(CLIENT_COMPILING)
 	@echo -e '\n*************************'
-	@echo -e '*** Running UNIT TEST ***'
+	@echo -e '*** Running FAKE CLIENT UNIT TEST ***'
 	@echo -e '*************************'
 	@sudo ./build/client_test $(FAKE_CLIENT) 
 
@@ -447,7 +449,7 @@ valgrind_client:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 87):
+#  recipe to execute (from 'Makefile', line 88):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -461,7 +463,7 @@ valgrind_server:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 77):
+#  recipe to execute (from 'Makefile', line 78):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -469,7 +471,7 @@ valgrind_server:
 	@gcc -g  $(SERVER_COMPILING) 
 	@echo -e '*** Running VALGRIND TEST ***'
 	@echo -e '*************************'
-	@valgrind -s --leak-check=full --show-leak-kinds=all ./build/server_test $(SERVER_PARAM)
+	@valgrind  --show-leak-kinds=all ./build/server_test $(SERVER_PARAM)
 
 # Not a target:
 server_pigeon/server_tls.c:
@@ -485,12 +487,12 @@ server_pigeon/server_tls.c:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 37 / storage = 381 B / avg = 10 B
-# current buf: size = 8162 B / used = 381 B / count = 37 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 40 / storage = 422 B / avg = 10 B
+# current buf: size = 8162 B / used = 422 B / count = 40 / avg = 10 B
 
-# strcache performance: lookups = 50 / hit rate = 26%
+# strcache performance: lookups = 53 / hit rate = 24%
 # hash-table stats:
-# Load=37/8192=0%, Rehash=0, Collisions=1/50=2%
-# Finished Make data base on Sat Jul  9 19:42:54 2022
+# Load=40/8192=0%, Rehash=0, Collisions=1/53=2%
+# Finished Make data base on Sun Jul 10 18:48:34 2022
 
  
