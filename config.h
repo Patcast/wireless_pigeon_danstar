@@ -22,7 +22,7 @@
 #include <openssl/err.h>
 #include <resolv.h>// Only for client 
 
-#include "gpio_handler.h"
+
 #include "errmacros.h"
 
 //#define MAXBUF 1024

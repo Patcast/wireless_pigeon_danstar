@@ -1,6 +1,6 @@
-FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check)
+FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lsoc
 
-GPI0_COMPILING =  main.c gpio_handler.c  -o build/gpio_test $(FLAGS)
+GPI0_COMPILING =  main.c  -o build/gpio_test $(FLAGS)
 
 gpio: 
 	@echo -e '\n*******************************'

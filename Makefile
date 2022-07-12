@@ -1,4 +1,4 @@
-FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
+FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto -lsoc
 SERVER_IP = 127.0.0.1
 PORT = 8537
 SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure

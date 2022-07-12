@@ -1,5 +1,7 @@
 //#include "server_pigeon.h" //TODO REMOVE!!
 #include "conn_mgr.h"
+#include "gpio_handler.h"
+
 #define FLAG_SIGNAL_1 0x01
 #define FLAG_SIGNAL_2 0x02
 #define FLAG_SIGNAL_3 0x04
