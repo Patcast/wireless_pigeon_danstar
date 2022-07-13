@@ -20,12 +20,7 @@ typedef struct gpio_btn {
     gpio* shut_gpio_btn;
 }gpio_set_t;
 
-/* typedef struct callback_params {
 
-    gpio* gpio_btn_c;
-    connection_params_t* params_c;
-    
-}callback_params_t; */
 typedef struct individual_callback_params {
     int gpio_id;
     connection_params_t* connection_params;
@@ -55,4 +50,5 @@ int select_state(btn_pressed_t input,connection_params_t* params);
 int execute_command(connection_params_t* params,commands_t command,status_t cmd_status,u_int8_t  instruction_code);
 int command_handshake(connection_params_t* params, wireless_data_t msg_send);
 connection_params_t*  start_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input);
-int close_client(connection_params_t* params,gpio_set_t *  btn_gpios );
+int close_client(connection_params_t* params);
+int close_gpio(gpio_set_t *  btn_gpios);

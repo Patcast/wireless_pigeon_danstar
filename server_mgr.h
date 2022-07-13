@@ -9,19 +9,19 @@
 #define FLAG_SIGNAL_5 0x10
 #define FLAG_SIGNAL_6 0x20
 
-#define PIN_ARM_1 86
-#define PIN_ARM_2 87
-#define PIN_ARM_3 10
-#define PIN_ARM_4 9
-#define PIN_ARM_5 8
-#define PIN_ARM_6 78
+#define PIN_ARM_1 66
+#define PIN_ARM_2 69
+#define PIN_ARM_3 45
+#define PIN_ARM_4 23
+#define PIN_ARM_5 47
+#define PIN_ARM_6 27
 
-#define PIN_IGN_1 88
-#define PIN_IGN_2 89
-#define PIN_IGN_3 11
-#define PIN_IGN_4 81
-#define PIN_IGN_5 80
-#define PIN_IGN_6 79
+#define PIN_IGN_1 67
+#define PIN_IGN_2 68
+#define PIN_IGN_3 44
+#define PIN_IGN_4 26
+#define PIN_IGN_5 46
+#define PIN_IGN_6 65
 
 
 

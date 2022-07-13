@@ -111,8 +111,7 @@ int main(int argc, char *argv[]){
 	//exit:
 		if (gpio_btn_con) {
 			res = libsoc_gpio_free(gpio_btn_con);
-			if (res == EXIT_FAILURE)
-				perror("Could not free gpio CON");
+			if (res == EXIT_FAILURE)perror("Could not free gpio CON");
 		}
 
 		if (gpio_btn_arm) {

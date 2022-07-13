@@ -10,9 +10,14 @@ int callback_con(void* arg)
         // use select input. 
         select_state(btn,c_params->connection_params);
     }
-    else if(btn== CONNECT_BTN_GPIO &&c_params->connection_params->host_state == NOT_CONNECTED){
-        connect_with_rocket(c_params->connection_params,ZERO_CO,REQUESTED,0); //
+    else if(btn== CONNECT_BTN_GPIO){
+        if(c_params->connection_params->host_state == NOT_CONNECTED){
+            connect_with_rocket(c_params->connection_params,ZERO_CO,REQUESTED,0); //
+        }
+        else printf("MC alrady has a connection.\n");
+        
     }
+    //else if(btn == SHUT_BTN_GPIO && c_params->connection_params->host_state == NOT_CONNECTED ) c_params->connection_params->host_state = SHUT_DOWN; might be nice to close the program even if not connected. 
     else printf("Press CON to connect\n");
     sleep(1);
 	return EXIT_SUCCESS;
@@ -20,10 +25,6 @@ int callback_con(void* arg)
 
 
 int run_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input){
-    // TODO: start Gpios and Set all to zero;
-
-    //int gpio_btn_ids[] = {CONNECT_BTN_GPIO,ARM_BTN_GPIO,IGN_BTN_GPIO,RESET_BTN_GPIO,SHUT_BTN_GPIO};
-    //btn_pressed_t btn;
 
     callback_params_t pt_call_params;
 
@@ -37,7 +38,8 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
     do{
         sleep(1);
     }while(connection_params->host_state != SHUT_DOWN);
-    close_client(connection_params,btn_gpios); 
+    close_client(connection_params); 
+    close_gpio(btn_gpios);
 
     return 0; 
 }
@@ -45,7 +47,7 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
 gpio_set_t * start_gpios(connection_params_t* pt_connection_params, callback_params_t* pt_call_params){
 
     printf("Starting gpio\n");
-    libsoc_set_debug(1);
+    //libsoc_set_debug(1);
     gpio_set_t* btn_gpios = malloc(sizeof(gpio_set_t)); 
     MEMORY_ERROR(btn_gpios);
     
@@ -71,7 +73,7 @@ gpio_set_t * start_gpios(connection_params_t* pt_connection_params, callback_par
 
 gpio* start_individual_btn_gpio(individual_callback_params_t* pt_ind_call_params){
 
-    gpio* new_gpio = libsoc_gpio_request(pt_ind_call_params->gpio_id, LS_GPIO_GREEDY);
+    gpio* new_gpio = libsoc_gpio_request(pt_ind_call_params->gpio_id, LS_GPIO_SHARED);
 	if (new_gpio == NULL ) printf("gpio were Unsuccessfully requested\n");
 	
 
@@ -92,8 +94,8 @@ gpio* start_individual_btn_gpio(individual_callback_params_t* pt_ind_call_params
 int select_state(btn_pressed_t input,connection_params_t* params){
 
     /// TODO: switch statement 
+    
     if(input == SHUT_BTN_GPIO) execute_command(params,SHUTDOWN_CO,REQUESTED,0);
-    //else if (input == SHUT_BTN_GPIO) params->host_state = SHUT_DOWN;// function not used atm. in this case only the client is shut down. 
     else if ((input == RESET_BTN_GPIO)||(params->host_state == IGNITE)) execute_command(params,ZERO_CO,REQUESTED,0); 
     else if((input == ARM_BTN_GPIO))execute_command(params,ARM_CO,REQUESTED,ARM_SIGNAL);
     else if((input == IGN_BTN_GPIO)){
@@ -201,11 +203,30 @@ connection_params_t*  start_client(const char* ip_address_input, const int mypor
     return params;
 }
 
-int close_client(connection_params_t* params,gpio_set_t *  btn_gpios){
+int close_client(connection_params_t* params){
     if(params->host_state != NOT_CONNECTED) close_host_conn(params);
     free( params);
-    free(btn_gpios);
     printf("\nprogram is shutting down..\n");
+    return 0;
+}
+int close_gpio(gpio_set_t *  btn_gpios){
+
+    int res = libsoc_gpio_free(btn_gpios->con_gpio_btn);
+    if (res == EXIT_FAILURE)perror("Could not free gpio CON");
+
+    res = libsoc_gpio_free(btn_gpios->shut_gpio_btn);
+    if (res == EXIT_FAILURE)perror("Could not free gpio ARM");
+    res = libsoc_gpio_free(btn_gpios->arm_gpio_btn);
+    if (res == EXIT_FAILURE)perror("Could not free gpio IGN");
+    res = libsoc_gpio_free(btn_gpios->ign_gpio_btn);
+    if (res == EXIT_FAILURE)perror("Could not free gpio RESET");
+    res = libsoc_gpio_free(btn_gpios->reset_gpio_btn);
+    if (res == EXIT_FAILURE)perror("Could not free gpio SHUT");
+
+    free(btn_gpios);
+
+    printf("\ngpios are closed..\n");
+
     return 0;
 }
 
