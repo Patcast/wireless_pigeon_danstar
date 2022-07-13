@@ -12,7 +12,7 @@ int callback_con(void* arg)
     }
     else if(btn== CONNECT_BTN_GPIO){
         if(c_params->connection_params->host_state == NOT_CONNECTED){
-            connect_with_rocket(c_params->connection_params,ZERO_CO,REQUESTED,0); //
+            if(connect_with_rocket(c_params->connection_params,ZERO_CO,REQUESTED,0)==0)libsoc_gpio_set_level(c_params->pt_gpio_set->con_gpio_led, HIGH); //
         }
         else printf("MC alrady has a connection.\n");
         
@@ -50,7 +50,7 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
 gpio_set_t * start_gpios(connection_params_t* pt_connection_params, callback_params_t* pt_call_params){
 
     printf("Starting gpio\n");
-    libsoc_set_debug(1);
+    //libsoc_set_debug(1);
     gpio_set_t* btn_gpios = malloc(sizeof(gpio_set_t)); 
     MEMORY_ERROR(btn_gpios);
 
@@ -158,7 +158,6 @@ int execute_command(individual_callback_params_t *  c_params,commands_t command,
     if(!command_handshake(c_params->connection_params,msg_send)){
         if(msg_send.command==ZERO_CO){
             c_params->connection_params->host_state=ZERO; 
-            libsoc_gpio_set_level(c_params->pt_gpio_set->con_gpio_led, LOW);
             libsoc_gpio_set_level(c_params->pt_gpio_set->arm_gpio_led, LOW);
             libsoc_gpio_set_level(c_params->pt_gpio_set->ign_gpio_led, LOW);
             printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
@@ -251,6 +250,10 @@ int close_client(connection_params_t* params){
 }
 int close_gpio(gpio_set_t *  btn_gpios){
 
+    libsoc_gpio_set_level(btn_gpios->con_gpio_led, LOW);
+    libsoc_gpio_set_level(btn_gpios->arm_gpio_led, LOW);
+    libsoc_gpio_set_level(btn_gpios->ign_gpio_led, LOW);
+
     int res = libsoc_gpio_free(btn_gpios->con_gpio_btn);
     if (res == EXIT_FAILURE)perror("Could not free gpio CON");
     res = libsoc_gpio_free(btn_gpios->shut_gpio_btn);
@@ -272,7 +275,7 @@ int close_gpio(gpio_set_t *  btn_gpios){
     if (res == EXIT_FAILURE)perror("Could not free gpio RESET");
 
 
-    free(btn_gpios);
+    free(btn_gpios); 
 
     printf("\ngpios are closed..\n");
 
