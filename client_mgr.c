@@ -3,15 +3,18 @@
 int callback_con(void* arg)
 {
 
-    callback_params_t* args = arg;
-	int btn= args->gpio_btn_c->gpio;
-	
-	if(CONNECT_BTN_GPIO  == btn)	printf("\nCONNECT PRESSED...%d\n",btn);
-	else if(ARM_BTN_GPIO==btn)	printf("\nARM PRESSED...%d\n",btn);
-    else if(IGN_BTN_GPIO  == btn)	printf("\nCONNECT PRESSED...%d\n",btn);
-	else if(RESET_BTN_GPIO==btn)	printf("\nARM PRESSED...%d\n",btn);
-	else if(SHUT_BTN_GPIO==btn)	printf("\nARM PRESSED...%d\n",btn);
+    individual_callback_params_t* c_params = (individual_callback_params_t*) arg;
+	int btn= c_params-> gpio_id;
 
+    if(c_params->connection_params->host_state  > NOT_CONNECTED){
+        // use select input. 
+        select_state(btn,c_params->connection_params);
+    }
+    else if(btn== CONNECT_BTN_GPIO &&c_params->connection_params->host_state == NOT_CONNECTED){
+        connect_with_rocket(c_params->connection_params,ZERO_CO,REQUESTED,0); //
+    }
+    else printf("Press CON to connect\n");
+    sleep(1);
 	return EXIT_SUCCESS;
 }
 
@@ -20,63 +23,67 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
     // TODO: start Gpios and Set all to zero;
 
     //int gpio_btn_ids[] = {CONNECT_BTN_GPIO,ARM_BTN_GPIO,IGN_BTN_GPIO,RESET_BTN_GPIO,SHUT_BTN_GPIO};
-    btn_pressed_t btn;
+    //btn_pressed_t btn;
 
-    connection_params_t* params = start_client(ip_address_input,  myport_input, certificate_input, priv_key_input);
-    if(params==NULL)return 1;
+    callback_params_t pt_call_params;
 
+    connection_params_t* connection_params = start_client(ip_address_input,  myport_input, certificate_input, priv_key_input);
+    if(connection_params ==NULL)return 1;
 
-    gpio_set_t *  btn_gpio = start_gpios(params);
-   
+    
+    gpio_set_t *  btn_gpios = start_gpios(connection_params,&pt_call_params); // remeber to free this 
+    if (btn_gpios==NULL) printf("btn_gpios is null");
 
     do{
-/*         printf("Press zero to connect with server.\n");
-        scanf("%d",(int*) &btn);
-        if(btn == BTN_CONNECT){
-                if(connect_with_rocket(params,ZERO_CO,REQUESTED,0)==0){
-                        do{
-                            printf("\nPress a Button:\nBTN_CONNECT=0\nBTN_ZERO=1\nBTN_ARM=2\nBTN_IGNITE=3\nBTN_SHUT_DOWN_SERVER=4\nBTN_SHUT_DOWN_CLIENT=5\n");
-                            scanf("%d",(int*) &btn);
-                            select_state(btn,params);
-                        }while(params->host_state != SHUT_DOWN);
-                }
-        } */
-    }while(params->host_state != SHUT_DOWN);
-    exit_client(params);  
+        sleep(1);
+    }while(connection_params->host_state != SHUT_DOWN);
+    close_client(connection_params,btn_gpios); 
+
+    return 0; 
 }
 
-gpio_set_t * start_gpios(connection_params_t* params){
+gpio_set_t * start_gpios(connection_params_t* pt_connection_params, callback_params_t* pt_call_params){
+
     printf("Starting gpio\n");
     libsoc_set_debug(1);
-    gpio_set_t* btn_gpios = malloc(sizeof(gpio_set_t));
+    gpio_set_t* btn_gpios = malloc(sizeof(gpio_set_t)); 
     MEMORY_ERROR(btn_gpios);
-    btn_gpios->con_gpio_btn = start_individual_btn_gpio(params,CONNECT_BTN_GPIO);
-    btn_gpios->arm_gpio_btn = start_individual_btn_gpio(params,ARM_BTN_GPIO);
-    btn_gpios->ign_gpio_btn = start_individual_btn_gpio(params,IGN_BTN_GPIO);
-    btn_gpios->reset_gpio_btn = start_individual_btn_gpio(params,RESET_BTN_GPIO);
-    btn_gpios->shut_gpio_btn = start_individual_btn_gpio(params,SHUT_BTN_GPIO);
+    
+    (pt_call_params->con_callback).gpio_id = CONNECT_BTN_GPIO;
+    (pt_call_params->con_callback).connection_params = pt_connection_params;
+    (pt_call_params->arm_callback).gpio_id = ARM_BTN_GPIO;
+    (pt_call_params->arm_callback).connection_params = pt_connection_params;
+    (pt_call_params->ign_callback).gpio_id = IGN_BTN_GPIO;
+    (pt_call_params->ign_callback).connection_params = pt_connection_params;
+    (pt_call_params->reset_callback).gpio_id = RESET_BTN_GPIO;
+    (pt_call_params->reset_callback).connection_params = pt_connection_params;
+    (pt_call_params->shut_callback).gpio_id = SHUT_BTN_GPIO;
+    (pt_call_params->shut_callback).connection_params = pt_connection_params;
+
+    btn_gpios->con_gpio_btn = start_individual_btn_gpio(&(pt_call_params->con_callback));
+    btn_gpios->arm_gpio_btn = start_individual_btn_gpio(&(pt_call_params->arm_callback));
+    btn_gpios->ign_gpio_btn = start_individual_btn_gpio(&(pt_call_params->ign_callback));
+    btn_gpios->reset_gpio_btn = start_individual_btn_gpio(&(pt_call_params->reset_callback));
+    btn_gpios->shut_gpio_btn = start_individual_btn_gpio(&(pt_call_params->shut_callback));
+
     return btn_gpios;
 }
 
-gpio* start_individual_btn_gpio(connection_params_t* params,int  btn_id){
+gpio* start_individual_btn_gpio(individual_callback_params_t* pt_ind_call_params){
 
-    gpio* new_gpio = libsoc_gpio_request(btn_id, LS_GPIO_GREEDY);
-
+    gpio* new_gpio = libsoc_gpio_request(pt_ind_call_params->gpio_id, LS_GPIO_GREEDY);
 	if (new_gpio == NULL ) printf("gpio were Unsuccessfully requested\n");
 	
+
 	libsoc_gpio_set_direction(new_gpio, INPUT);
 	if (libsoc_gpio_get_direction(new_gpio) != INPUT)printf("Failed to set direction to INPUT\n");
 
     libsoc_gpio_set_edge(new_gpio, RISING);
   	if (libsoc_gpio_get_edge(new_gpio) != RISING) printf("Failed to set edge to RISING\n");
 
-    callback_params_t* c_params =  malloc(sizeof(c_params));
-    c_params->gpio_btn_c = new_gpio;
-    c_params->params_c = params; 
 
-  	int res = libsoc_gpio_callback_interrupt(new_gpio, &callback_con, (void *) c_params);
+  	int res = libsoc_gpio_callback_interrupt(new_gpio, &callback_con, (void *) pt_ind_call_params);
 	if (res == EXIT_FAILURE) perror("Failed to set gpio callback");
-    free(c_params);
     return new_gpio;
 }
 
@@ -85,14 +92,15 @@ gpio* start_individual_btn_gpio(connection_params_t* params,int  btn_id){
 int select_state(btn_pressed_t input,connection_params_t* params){
 
     /// TODO: switch statement 
-    if(input == BTN_SHUT_DOWN_SERVER) execute_command(params,SHUTDOWN_CO,REQUESTED,0);
-    else if (input == BTN_SHUT_DOWN_CLIENT) params->host_state = SHUT_DOWN;
-    else if ((input == BTN_ZERO)||(params->host_state == IGNITE)) execute_command(params,ZERO_CO,REQUESTED,0); 
-    else if((input == BTN_ARM))execute_command(params,ARM_CO,REQUESTED,ARM_SIGNAL);
-    else if((input == BTN_IGNITE)){
+    if(input == SHUT_BTN_GPIO) execute_command(params,SHUTDOWN_CO,REQUESTED,0);
+    //else if (input == SHUT_BTN_GPIO) params->host_state = SHUT_DOWN;// function not used atm. in this case only the client is shut down. 
+    else if ((input == RESET_BTN_GPIO)||(params->host_state == IGNITE)) execute_command(params,ZERO_CO,REQUESTED,0); 
+    else if((input == ARM_BTN_GPIO))execute_command(params,ARM_CO,REQUESTED,ARM_SIGNAL);
+    else if((input == IGN_BTN_GPIO)){
         if(params->host_state == ARM)execute_command(params,IGNITE_CO,REQUESTED,IGNITE_SIGNAL);
         else printf("Rocket must be armed before IGNITE!\n");
     }
+    else if( input == CONNECT_BTN_GPIO) printf("Client is already connected\n");
     else printf("wrong input I/O error.\n");
     return 0; 
 }
@@ -193,9 +201,10 @@ connection_params_t*  start_client(const char* ip_address_input, const int mypor
     return params;
 }
 
-int exit_client(connection_params_t* params){
+int close_client(connection_params_t* params,gpio_set_t *  btn_gpios){
     if(params->host_state != NOT_CONNECTED) close_host_conn(params);
     free( params);
+    free(btn_gpios);
     printf("\nprogram is shutting down..\n");
     return 0;
 }
