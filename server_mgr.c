@@ -17,20 +17,19 @@ int run_server(int myport_input, const char* certificate_input, const char* priv
     
     ///Stars openssl library and allow server to receive new connections 
     if ((star_host_connection(params)==0)&&(start_port_server(params)==0)) {//TODO: is the error printed?
-        start_gpio();
+        //start_gpio();
         do{
             
             if (connect_with_client(params))printf("Attempt to connect with client fail");
             else{
                 params->host_state = ZERO;
                 ShowCerts(params->remote_ssl);
-                ///TODO: SET GPIO to zero.
                 select_state_server(params);
                 close_remote_conn(params);
             }
         }while(params->host_state !=SHUT_DOWN);
         close_server(params);
-        close_gpio();
+        //close_gpio();
         return 0;
     }
     return 1;
@@ -70,7 +69,7 @@ int run_zero(connection_params_t* params,wireless_data_t* msg_received, char* er
     if(error!=NULL)printf("%s", error);
     params->host_state = ZERO;
     msg_received->cmd_status=ACK;
-    reset_gpio();
+    //reset_gpio();
     write_to_remote( params, *msg_received);
     return 0;
 }
@@ -78,7 +77,7 @@ int run_zero(connection_params_t* params,wireless_data_t* msg_received, char* er
 int run_arm(connection_params_t* params,wireless_data_t* msg_received){
     params->host_state = ARM;
     msg_received->cmd_status=ACK;
-    set_gpio_arm(msg_received->instruction_code);
+    //set_gpio_arm(msg_received->instruction_code);
     write_to_remote( params, *msg_received);
     return 0;
 }
@@ -86,7 +85,7 @@ int run_ignite(connection_params_t* params,wireless_data_t* msg_received){
     if ((params->host_state == ARM )){
         params->host_state = IGNITE;
         msg_received->cmd_status=ACK;
-        set_gpio_ign(msg_received->instruction_code);
+        //set_gpio_ign(msg_received->instruction_code);
         write_to_remote( params, *msg_received);
     }
     else {
