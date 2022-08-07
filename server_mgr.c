@@ -3,7 +3,7 @@
 
 //unsigned int PIN_ARM_1 = 86;
 
-// BUG: PRevent cancel IGNITE signal due to debouncing. Redraw diagram.
+// BUG: PRevent cancel IGNITE signal due to debouncing. Redraw diagram. Also remove the function that If ignite is pressed twice it stops. 
 
 int run_server(int myport_input, const char* certificate_input, const char* priv_key_input){
 
@@ -14,6 +14,12 @@ int run_server(int myport_input, const char* certificate_input, const char* priv
     params->host_certificate = certificate_input;
     params->host_key = priv_key_input;
     params->host_is_client = FALSE;
+
+    #ifdef DEBUG_NO_GPIO 
+        printf("No gpio mode use");
+    #else 
+        printf("GPIO is used");
+    #endif
     
     ///Stars openssl library and allow server to receive new connections 
     if ((star_host_connection(params)==0)&&(start_port_server(params)==0)) {//TODO: is the error printed?
