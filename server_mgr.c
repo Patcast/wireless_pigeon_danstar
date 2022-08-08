@@ -2,6 +2,7 @@
 
 // TODO: Create non gpio compatible mode.
 // TODO: Ensure that code modifies output of gpios
+// TODO: Double check that the gpio work with the old methods, otherwise subtitude for client methods. 
 
 //unsigned int PIN_ARM_1 = 86;
 
@@ -57,7 +58,7 @@ int select_state_server(connection_params_t* params){
         if(read_from_remote(params, msg_received))break;
         else{
             if (msg_received->command == SHUTDOWN_CO)run_shut_down_server(params,msg_received);
-            else if (params->host_state == IGNITE)run_zero(params,msg_received,"ERROR:CMD called after ignite. Setting zero state again\n");
+            else if (params->host_state == IGNITE)run_zero(params,msg_received,"ERROR:CMD called after ignite. Setting zero state again\n");//BUG: This might be inconvinient.
             else if ((msg_received->command == ZERO_CO ))run_zero(params,msg_received,"Server is connected to Mission Control :)\n");
             else if ((msg_received->command == ARM_CO ))run_arm(params,msg_received);
             else if ((msg_received->command == IGNITE_CO ))run_ignite(params,msg_received);
@@ -109,7 +110,7 @@ int set_gpio_arm(u_int8_t arm_signal){
     
     if(arm_signal!=0){
         
-        printf("ARMsignal as received: %d\n",arm_signal);
+        printf("\nARMsignal as received: %d\n",arm_signal);
         unsigned char bit1,bit2,bit3,bit4,bit5,bit6;
 
         bit6 = (arm_signal & FLAG_SIGNAL_6) ? 1 : 0; 
@@ -119,7 +120,7 @@ int set_gpio_arm(u_int8_t arm_signal){
         bit2 = (arm_signal & FLAG_SIGNAL_2) ? 1 : 0;
         bit1 = (arm_signal & FLAG_SIGNAL_1) ? 1 : 0;
 
-        printf ("ARM signal porcessed:%d%d%d%d%d%d",bit6,bit5,bit4,bit3,bit2,bit1);
+        printf ("ARM signal porcessed:%d%d%d%d%d%d\n",bit6,bit5,bit4,bit3,bit2,bit1);
 
         #ifndef NO_GPIO
         gpio_set_value(PIN_ARM_6, bit6);
@@ -134,7 +135,7 @@ int set_gpio_arm(u_int8_t arm_signal){
 }
 int set_gpio_ign(u_int8_t ign_signal){
     if(ign_signal!=0){
-        printf("IGN signal as received: %d\n",ign_signal);
+        printf("\nIGN signal as received: %d\n",ign_signal);
         unsigned char bit1,bit2,bit3,bit4,bit5,bit6;
 
         bit6 = (ign_signal & FLAG_SIGNAL_6) ? 1 : 0; 
@@ -144,7 +145,7 @@ int set_gpio_ign(u_int8_t ign_signal){
         bit2 = (ign_signal & FLAG_SIGNAL_2) ? 1 : 0;
         bit1 = (ign_signal & FLAG_SIGNAL_1) ? 1 : 0;
 
-        printf ("IGN signal porcessed:%d%d%d%d%d%d",bit6,bit5,bit4,bit3,bit2,bit1);
+        printf ("IGN signal porcessed:%d%d%d%d%d%d\n",bit6,bit5,bit4,bit3,bit2,bit1);
 
         #ifndef NO_GPIO
         gpio_set_value(PIN_IGN_6, bit6);
@@ -195,7 +196,7 @@ int start_gpio(){
 }
 
 int reset_gpio(){
-     #ifdef NO_GPIO 
+     #ifndef NO_GPIO 
         gpio_set_value(PIN_ARM_1, LOW);
         gpio_set_value(PIN_ARM_2, LOW);
         gpio_set_value(PIN_ARM_3, LOW);
@@ -230,6 +231,8 @@ int close_gpio(){
         gpio_unexport(PIN_IGN_6);
     #endif
 }
+
+
 
 int close_server(connection_params_t* params){
     close_host_conn(params);

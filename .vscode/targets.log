@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Aug  7 15:44:36 2022
+# Make data base, printed on Sun Aug  7 18:25:45 2022
 
 # Variables
 
@@ -63,7 +63,7 @@ SNAP_ARCH = amd64
 # makefile (from 'Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
 # makefile (from 'Makefile', line 11)
-CLIENT_COMPILING = conn_mgr.c client_main.c client_mgr.c -o build/client_test $(FLAGS)
+CLIENT_COMPILING = conn_mgr.c client_main.c client_mgr.c -o build/client_test 
 # automatic
 @F = $(notdir $@)
 # environment
@@ -117,7 +117,7 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # makefile (from 'Makefile', line 6)
-PORT = 8537
+PORT = 85354
 # environment
 INVOCATION_ID = 69a6395c6161402f9638034271140064
 # environment
@@ -215,7 +215,7 @@ SNAP_REVISION = 102
 # environment
 LC_MONETARY = en_GB.UTF-8
 # makefile (from 'Makefile', line 1)
-.DEFAULT_GOAL := non_gpio_server
+.DEFAULT_GOAL := non_gpio_client
 # environment
 XDG_CURRENT_DESKTOP = Unity
 # automatic
@@ -296,6 +296,7 @@ _CE_M =
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
 WINDOWPATH = 2
+ 
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
@@ -311,7 +312,6 @@ VSCODE_PID = 35590
 # environment
 _CE_CONDA = 
 # variable set hash-table stats:
- 
 # Load=149/1024=15%, Rehash=0, Collisions=25/174=14%
 
 # Pattern-specific Variable Values
@@ -335,15 +335,30 @@ non_gpio_server:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 30):
+	@echo -e '\n**********************************'
+	@echo -e '*** Compiling for NON_GPIO_SERVER **'
+	@echo -e '************************************'
+	@mkdir -p build
+	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING) $(DEBUG_FLAGS) -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
+	@echo -e '\n******************************'
+	@echo -e '*** Running NON_GPIO_SERVER  ***'
+	@echo -e '********************************'
+	@sudo ./build/server_test $(SERVER_PARAM)
+
+debug_non_gpio_client:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 64):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING) $(DEBUG_FLAGS) -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
+	@gcc  -g $(CLIENT_COMPILING) $(DEBUG_FLAGS) -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
 	@echo -e '\n*************************'
-	@echo -e '*** Running SERVER UNIT TEST ***'
+	@echo -e '*** Running CLIENT UNIT TEST ***'
 	@echo -e '*************************'
-	@sudo ./build/server_test $(SERVER_PARAM)
+	@sudo gdb -q -tui ./build/client_test $(CLIENT_PARAM)
 
 # Not a target:
 all:
@@ -356,7 +371,7 @@ client:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 41):
+#  recipe to execute (from 'Makefile', line 42):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -371,14 +386,14 @@ zip:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 94):
+#  recipe to execute (from 'Makefile', line 117):
 	zip lab7_ex2.zip connmgr.c  errmacros.h connmgr.h config.h lib/dplist.c lib/dplist.h lib/tcpsock.c lib/tcpsock.h
 
 debug_server:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 63):
+#  recipe to execute (from 'Makefile', line 86):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -392,7 +407,7 @@ debug_server:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-07 15:44:35.160099537
+#  Last modified 2022-08-07 18:25:45.135960847
 #  File has been updated.
 #  Successfully updated.
 
@@ -401,21 +416,21 @@ server:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 18):
-	@echo -e '\n*******************************'
+	@echo -e '\n******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
 	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING) $(FLAGS)
-	@echo -e '\n*************************'
+	@echo -e '\n******************************'
 	@echo -e '*** Running SERVER UNIT TEST ***'
-	@echo -e '*************************'
+	@echo -e '********************************'
 	@sudo ./build/server_test $(SERVER_PARAM)
 
 fake_client:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 52):
+#  recipe to execute (from 'Makefile', line 75):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -436,7 +451,7 @@ valgrind_client:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 83):
+#  recipe to execute (from 'Makefile', line 106):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -446,11 +461,26 @@ valgrind_client:
 	@echo -e '*************************'
 	@valgrind -s --leak-check=full ./build/server_test $(CLIENT_PARAM)
 
+non_gpio_client:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 53):
+	@echo -e '\n*******************************'
+	@echo -e '*** Compiling for UNIT TEST ***'
+	@echo -e '*******************************'
+	@mkdir -p build
+	@gcc  $(CLIENT_COMPILING) $(DEBUG_FLAGS) -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
+	@echo -e '\n*************************'
+	@echo -e '*** Running CLIENT UNIT TEST ***'
+	@echo -e '*************************'
+	@sudo ./build/client_test $(CLIENT_PARAM)
+
 valgrind_server:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 73):
+#  recipe to execute (from 'Makefile', line 96):
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
@@ -461,19 +491,19 @@ valgrind_server:
 	@valgrind  --show-leak-kinds=all ./build/server_test $(SERVER_PARAM)
 
 # files hash-table stats:
-# Load=12/1024=1%, Rehash=0, Collisions=0/22=0%
+# Load=14/1024=1%, Rehash=0, Collisions=0/24=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 46 / storage = 496 B / avg = 10 B
-# current buf: size = 8162 B / used = 496 B / count = 46 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 48 / storage = 534 B / avg = 11 B
+# current buf: size = 8162 B / used = 534 B / count = 48 / avg = 11 B
 
-# strcache performance: lookups = 58 / hit rate = 20%
+# strcache performance: lookups = 62 / hit rate = 22%
 # hash-table stats:
-# Load=46/8192=1%, Rehash=0, Collisions=1/58=2%
-# Finished Make data base on Sun Aug  7 15:44:36 2022
+# Load=48/8192=1%, Rehash=0, Collisions=1/62=2%
+# Finished Make data base on Sun Aug  7 18:25:45 2022
 
  
