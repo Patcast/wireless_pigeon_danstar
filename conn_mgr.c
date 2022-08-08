@@ -36,7 +36,7 @@ int star_host_connection (connection_params_t* params){
         return 1;
     }
        if ((params->host_fd= socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("Socket");
+        perror("Error creating socket");
         return 1;
     }
     printf("socket created\n");
