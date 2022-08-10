@@ -1,9 +1,7 @@
 #include "conn_mgr.h"
-#include "libsoc_gpio.h"
-#include "libsoc_debug.h" 
 
-#define ARM_SIGNAL 0x17
-#define IGNITE_SIGNAL 0x12
+#define ARM_SIGNAL 0x1B
+#define IGNITE_SIGNAL 0x35
 
 #define CONNECT_BTN_GPIO    30
 #define ARM_BTN_GPIO        31

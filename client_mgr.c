@@ -58,11 +58,11 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
         do{
             sleep(1);
         }while(conn_params->host_state != SHUT_DOWN);
-    #endif
-    close_client(conn_params); 
-    #ifndef NO_GPIO
         close_gpio(btn_gpios);
     #endif
+
+    close_client(conn_params); 
+
     return 0; 
 }
 
@@ -70,18 +70,28 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
 
 
 int select_state(btn_pressed_t input,individual_callback_params_t *  c_params){
-
-    // TODO: switch statement 
-    
-    if(input == SHUT_BTN_GPIO) execute_command(c_params,SHUTDOWN_CO,REQUESTED,0);
-    else if ((input == RESET_BTN_GPIO)||(c_params->connection_params->host_state == IGNITE)) execute_command(c_params,ZERO_CO,REQUESTED,0); 
-    else if((input == ARM_BTN_GPIO))execute_command(c_params,ARM_CO,REQUESTED,ARM_SIGNAL);
-    else if((input == IGN_BTN_GPIO)){
-        if(c_params->connection_params->host_state == ARM)execute_command(c_params,IGNITE_CO,REQUESTED,IGNITE_SIGNAL);
-        else printf("Rocket must be armed before IGNITE!\n");
+    switch (input)
+    {
+    case SHUT_BTN_GPIO:
+        execute_command(c_params,SHUTDOWN_CO,REQUESTED,0);
+        break;
+    case RESET_BTN_GPIO:
+        execute_command(c_params,ZERO_CO,REQUESTED,0); 
+        break;
+    case ARM_BTN_GPIO:
+        execute_command(c_params,ARM_CO,REQUESTED,ARM_SIGNAL);
+        break;
+    case IGN_BTN_GPIO:
+        if(c_params->connection_params->host_state == ZERO)printf("Rocket must be armed before IGNITE!\n");
+        else execute_command(c_params,IGNITE_CO,REQUESTED,IGNITE_SIGNAL);
+        break;
+    case CONNECT_BTN_GPIO:
+         printf("Client is already connected\n");
+        break;
+    default:
+        printf("wrong input I/O error.\n");
+        break;
     }
-    else if( input == CONNECT_BTN_GPIO) printf("Client is already connected\n");
-    else printf("wrong input I/O error.\n");
     return 0; 
 }
 
@@ -103,43 +113,46 @@ int execute_command(individual_callback_params_t *  c_params,commands_t command,
     msg_send.command = command;
     msg_send.cmd_status = cmd_status;
     msg_send.instruction_code = instruction_code;
-    //TODO: swtich()
+
     if(!command_handshake(c_params->connection_params,msg_send)){
-        if(msg_send.command==ZERO_CO){
-            c_params->connection_params->host_state=ZERO;
-            #ifndef NO_GPIO
-                libsoc_gpio_set_level(c_params->pt_gpio_set->arm_gpio_led, LOW);
-                libsoc_gpio_set_level(c_params->pt_gpio_set->ign_gpio_led, LOW);
-                 int i;
-                for(i=0; i<4; i++) 
-                {
-                    if (i%2==0)libsoc_gpio_set_level(c_params->pt_gpio_set->reset_gpio_led, HIGH);
-                    else libsoc_gpio_set_level(c_params->pt_gpio_set->reset_gpio_led, LOW);
-                    sleep(1);
-                }
-            #endif
-            printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
-
-        }
-        else if(msg_send.command==ARM_CO){
-            c_params->connection_params->host_state=ARM;  
-            printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
-            #ifndef NO_GPIO
-            libsoc_gpio_set_level(c_params->pt_gpio_set->arm_gpio_led, HIGH);
-            #endif
-
-        }
-        else if(msg_send.command==IGNITE_CO){
-            c_params->connection_params->host_state=IGNITE;  
-            printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
-            #ifndef NO_GPIO
-            libsoc_gpio_set_level(c_params->pt_gpio_set->ign_gpio_led, HIGH);
-            #endif
-        }
-        else if(msg_send.command==SHUTDOWN_CO){
-            c_params->connection_params->host_state=SHUT_DOWN;  
-            printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
-
+        switch (msg_send.command)
+        {
+            case ZERO_CO:
+                c_params->connection_params->host_state=ZERO;
+                #ifndef NO_GPIO
+                    libsoc_gpio_set_level(c_params->pt_gpio_set->arm_gpio_led, LOW);
+                    libsoc_gpio_set_level(c_params->pt_gpio_set->ign_gpio_led, LOW);
+                    int i;
+                    for(i=0; i<4; i++) 
+                    {
+                        if (i%2==0)libsoc_gpio_set_level(c_params->pt_gpio_set->reset_gpio_led, HIGH);
+                        else libsoc_gpio_set_level(c_params->pt_gpio_set->reset_gpio_led, LOW);
+                        sleep(1);
+                    }
+                #endif
+                printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
+                break;
+            case ARM_CO:
+                c_params->connection_params->host_state=ARM;  
+                printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
+                #ifndef NO_GPIO
+                libsoc_gpio_set_level(c_params->pt_gpio_set->arm_gpio_led, HIGH);
+                #endif
+                break;
+            case IGNITE_CO:
+                c_params->connection_params->host_state=IGNITE;  
+                printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
+                #ifndef NO_GPIO
+                libsoc_gpio_set_level(c_params->pt_gpio_set->ign_gpio_led, HIGH);
+                #endif
+                break;
+            case SHUTDOWN_CO:
+                c_params->connection_params->host_state=SHUT_DOWN;  
+                printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
+                break;
+            default:
+                printf("Unkown command. No action was executed.");
+                break;
         }
         return 0;
             

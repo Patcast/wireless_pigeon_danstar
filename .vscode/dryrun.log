@@ -1,4 +1,4 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/hurricane97/Documents/dtu/danStar/software_ignition/tsl_com'
 echo -e '\n*******************************'
 echo -e '*** Compiling for UNIT TEST ***'

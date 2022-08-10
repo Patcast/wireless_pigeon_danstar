@@ -21,6 +21,8 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <resolv.h>// Only for client 
+#include "libsoc_gpio.h"
+#include "libsoc_debug.h" 
 
 
 #include "errmacros.h"
