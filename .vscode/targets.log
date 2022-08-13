@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Aug  7 18:25:45 2022
+# Make data base, printed on Sat Aug 13 10:35:50 2022
 
 # Variables
 
@@ -131,7 +131,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 35541
+GIO_LAUNCHED_DESKTOP_FILE_PID = 138441
 # automatic
 %F = $(notdir $%)
 # environment
@@ -286,6 +286,7 @@ GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 ^F = $(notdir $^)
 # default
 SUFFIXES := 
+ 
 # makefile (from 'Makefile', line 4)
 FLAGS = -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto -lsoc
 # environment
@@ -296,7 +297,6 @@ _CE_M =
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
 WINDOWPATH = 2
- 
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
@@ -308,7 +308,7 @@ LC_ADDRESS = en_GB.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 35590
+VSCODE_PID = 138486
 # environment
 _CE_CONDA = 
 # variable set hash-table stats:
@@ -407,7 +407,7 @@ debug_server:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-07 18:25:45.135960847
+#  Last modified 2022-08-08 11:07:33.448664425
 #  File has been updated.
 #  Successfully updated.
 
@@ -504,6 +504,6 @@ valgrind_server:
 # strcache performance: lookups = 62 / hit rate = 22%
 # hash-table stats:
 # Load=48/8192=1%, Rehash=0, Collisions=1/62=2%
-# Finished Make data base on Sun Aug  7 18:25:45 2022
+# Finished Make data base on Sat Aug 13 10:35:50 2022
 
  
