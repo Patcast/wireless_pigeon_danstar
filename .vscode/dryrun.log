@@ -1,13 +1,6 @@
 make --dry-run --always-make --keep-going --print-directory
-make: Entering directory '/home/hurricane97/Documents/dtu/danStar/software_ignition/tsl_com'
-echo -e '\n*******************************'
-echo -e '*** Compiling for UNIT TEST ***'
-echo -e '*******************************'
-mkdir -p build
-gcc  conn_mgr.c client_main.c client_mgr.c -o build/client_test  -DNO_GPIO -std=c11  -D_DEFAULT_SOURCE  -Werror -lm -pthread -lcheck_pic -pthread -lrt -lm -lsubunit -L/usr/local/lib -lssl -lcrypto
-echo -e '\n*************************'
-echo -e '*** Running CLIENT UNIT TEST ***'
-echo -e '*************************'
-sudo ./build/client_test 127.0.0.1 85354 keys/client.crt keys/client_rsa_private.pem.unsecure
-make: Leaving directory '/home/hurricane97/Documents/dtu/danStar/software_ignition/tsl_com'
+make: Entering directory '/home/hurricane97/Documents/dtu/danStar/integration/danstar_code'
+make: Leaving directory '/home/hurricane97/Documents/dtu/danStar/integration/danstar_code'
  
+Makefile:6: *** missing separator.  Stop.
+

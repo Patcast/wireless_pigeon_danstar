@@ -2,4 +2,4 @@ hello Anton!
 Hello Pato!
 
 Please copy the following:
-git clone https://Patcast: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 @github.com/wireless_pigeon_danstar.git
+git clone https://Patcast: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@github.com/Patcast/wireless_pigeon_danstar.git server_code
