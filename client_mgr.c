@@ -1,5 +1,6 @@
 #include "client_mgr.h"
 
+#ifndef NO_GPIO
 int callback_con(void* arg)
 {
 
@@ -22,114 +23,75 @@ int callback_con(void* arg)
     sleep(1);
 	return EXIT_SUCCESS;
 }
+#endif
 
 
 int run_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input){
 
     callback_params_t pt_call_params;
 
-    connection_params_t* connection_params = start_client(ip_address_input,  myport_input, certificate_input, priv_key_input);
-    if(connection_params ==NULL)return 1;
-
-
+    connection_params_t* conn_params = start_client(ip_address_input,  myport_input, certificate_input, priv_key_input);
+    if(conn_params == NULL)return 1;
     
-    gpio_set_t *  btn_gpios = start_gpios(connection_params,&pt_call_params); // remeber to free this 
-    if (btn_gpios==NULL) printf("btn_gpios is null");
-   
-    
+    #ifdef NO_GPIO 
+        printf("\n\nNo GPIOs are used\n\n");
+        btn_pressed_t btn;
+        individual_callback_params_t c_params;    
+        c_params.connection_params = conn_params;
+        do{
+            printf("Press zero to connect with server.\n");
+            scanf("%d",(int*) &btn);
+            if(btn == BTN_CONNECT){
+                    if(connect_with_rocket(conn_params,ZERO_CO,REQUESTED,0)==0){
+                            do{
+                                printf("\nType the code of the button:\nBTN_CONNECT=\t30\nBTN_RESET=\t115\nBTN_ARM=\t31\nBTN_IGNITE=\t3\nBTN_SHUT_DOWN=\t49\n");
+                                scanf("%d",(int*) &btn);
+                                select_state(btn,&c_params);
+                            }while(conn_params->host_state != SHUT_DOWN);
+                    }
+            }
+        }while(conn_params->host_state != SHUT_DOWN);
+    #else 
+        printf("\n\nGPIOs are used\n\n");
+        gpio_set_t *  btn_gpios = start_gpios(conn_params,&pt_call_params);
+        if (btn_gpios==NULL) printf("btn_gpios is null");
+        do{
+            sleep(1);
+        }while(conn_params->host_state != SHUT_DOWN);
+        close_gpio(btn_gpios);
+    #endif
 
-    do{
-        sleep(1);
-    }while(connection_params->host_state != SHUT_DOWN);
-    close_client(connection_params); 
-    close_gpio(btn_gpios);
+    close_client(conn_params); 
 
     return 0; 
 }
 
-gpio_set_t * start_gpios(connection_params_t* pt_connection_params, callback_params_t* pt_call_params){
-
-    printf("Starting gpio\n");
-    //libsoc_set_debug(1);
-    gpio_set_t* btn_gpios = malloc(sizeof(gpio_set_t)); 
-    MEMORY_ERROR(btn_gpios);
-
-    btn_gpios->con_gpio_led = start__led_gpio(LED_CON);
-    btn_gpios->arm_gpio_led = start__led_gpio(LED_ARM);
-    btn_gpios->ign_gpio_led = start__led_gpio(LED_IGN);
-    btn_gpios->reset_gpio_led = start__led_gpio(LED_RESET);
-    
-    (pt_call_params->con_callback).gpio_id = CONNECT_BTN_GPIO;
-    (pt_call_params->con_callback).connection_params = pt_connection_params;
-    (pt_call_params->arm_callback).gpio_id = ARM_BTN_GPIO;
-    (pt_call_params->arm_callback).connection_params = pt_connection_params;
-    (pt_call_params->ign_callback).gpio_id = IGN_BTN_GPIO;
-    (pt_call_params->ign_callback).connection_params = pt_connection_params;
-    (pt_call_params->reset_callback).gpio_id = RESET_BTN_GPIO;
-    (pt_call_params->reset_callback).connection_params = pt_connection_params;
-    (pt_call_params->shut_callback).gpio_id = SHUT_BTN_GPIO;
-    (pt_call_params->shut_callback).connection_params = pt_connection_params;
-
-    (pt_call_params->con_callback).pt_gpio_set = btn_gpios;
-    (pt_call_params->arm_callback).pt_gpio_set = btn_gpios;
-    (pt_call_params->ign_callback).pt_gpio_set = btn_gpios;
-    (pt_call_params->reset_callback).pt_gpio_set = btn_gpios;
-    (pt_call_params->shut_callback).pt_gpio_set = btn_gpios;
-   
-
-    btn_gpios->con_gpio_btn = start_individual_btn_gpio(&(pt_call_params->con_callback));
-    btn_gpios->arm_gpio_btn = start_individual_btn_gpio(&(pt_call_params->arm_callback));
-    btn_gpios->ign_gpio_btn = start_individual_btn_gpio(&(pt_call_params->ign_callback));
-    btn_gpios->reset_gpio_btn = start_individual_btn_gpio(&(pt_call_params->reset_callback));
-    btn_gpios->shut_gpio_btn = start_individual_btn_gpio(&(pt_call_params->shut_callback));
-
-    return btn_gpios;
-}
-
-gpio* start__led_gpio(int led_id){
-    gpio* new_gpio = libsoc_gpio_request(led_id, LS_GPIO_SHARED);
-	if (new_gpio == NULL ) printf("gpio were Unsuccessfully requested\n");
-	
-	libsoc_gpio_set_direction(new_gpio, OUTPUT);
-	if (libsoc_gpio_get_direction(new_gpio) != OUTPUT)printf("Failed to set direction to INPUT\n");
-
-    libsoc_gpio_set_level(new_gpio, LOW);
-	if (libsoc_gpio_get_level(new_gpio) != LOW) printf("Failed setting gpio level HIGH\n");
-
-    return new_gpio;
-}
-
-gpio* start_individual_btn_gpio(individual_callback_params_t* pt_ind_call_params){
-
-    gpio* new_gpio = libsoc_gpio_request(pt_ind_call_params->gpio_id, LS_GPIO_SHARED);
-	if (new_gpio == NULL ) printf("gpio were Unsuccessfully requested\n");
-	libsoc_gpio_set_direction(new_gpio, INPUT);
-	if (libsoc_gpio_get_direction(new_gpio) != INPUT)printf("Failed to set direction to INPUT\n");
-
-    libsoc_gpio_set_edge(new_gpio, RISING);
-  	if (libsoc_gpio_get_edge(new_gpio) != RISING) printf("Failed to set edge to RISING\n");
-
-
-  	int res = libsoc_gpio_callback_interrupt(new_gpio, &callback_con, (void *) pt_ind_call_params);
-	if (res == EXIT_FAILURE) perror("Failed to set gpio callback");
-    return new_gpio;
-}
 
 
 
 int select_state(btn_pressed_t input,individual_callback_params_t *  c_params){
-
-    /// TODO: switch statement 
-    
-    if(input == SHUT_BTN_GPIO) execute_command(c_params,SHUTDOWN_CO,REQUESTED,0);
-    else if ((input == RESET_BTN_GPIO)||(c_params->connection_params->host_state == IGNITE)) execute_command(c_params,ZERO_CO,REQUESTED,0); 
-    else if((input == ARM_BTN_GPIO))execute_command(c_params,ARM_CO,REQUESTED,ARM_SIGNAL);
-    else if((input == IGN_BTN_GPIO)){
-        if(c_params->connection_params->host_state == ARM)execute_command(c_params,IGNITE_CO,REQUESTED,IGNITE_SIGNAL);
-        else printf("Rocket must be armed before IGNITE!\n");
+    switch (input)
+    {
+    case SHUT_BTN_GPIO:
+        execute_command(c_params,SHUTDOWN_CO,REQUESTED,0);
+        break;
+    case RESET_BTN_GPIO:
+        execute_command(c_params,ZERO_CO,REQUESTED,0); 
+        break;
+    case ARM_BTN_GPIO:
+        execute_command(c_params,ARM_CO,REQUESTED,ARM_SIGNAL);
+        break;
+    case IGN_BTN_GPIO:
+        if(c_params->connection_params->host_state == ZERO)printf("Rocket must be armed before IGNITE!\n");
+        else execute_command(c_params,IGNITE_CO,REQUESTED,IGNITE_SIGNAL);
+        break;
+    case CONNECT_BTN_GPIO:
+         printf("Client is already connected\n");
+        break;
+    default:
+        printf("wrong input I/O error.\n");
+        break;
     }
-    else if( input == CONNECT_BTN_GPIO) printf("Client is already connected\n");
-    else printf("wrong input I/O error.\n");
     return 0; 
 }
 
@@ -137,14 +99,11 @@ int select_state(btn_pressed_t input,individual_callback_params_t *  c_params){
 int connect_with_rocket(connection_params_t* params,commands_t command,status_t cmd_status,u_int8_t  instruction_code){
     if (connect_with_server(params)==0 && ShowCerts(params->remote_ssl)==0){
         params->host_state=ZERO;
-        ///GPIOS are at zero and client is connected to server.
-        return 0;
-        
+        return 0; 
     }
     else{
         printf("Error connecting with server, check network settings.\n");
         return 1;
-
     }
 }
 
@@ -154,50 +113,57 @@ int execute_command(individual_callback_params_t *  c_params,commands_t command,
     msg_send.command = command;
     msg_send.cmd_status = cmd_status;
     msg_send.instruction_code = instruction_code;
-    //TODO: swtich()
+
     if(!command_handshake(c_params->connection_params,msg_send)){
-        if(msg_send.command==ZERO_CO){
-            c_params->connection_params->host_state=ZERO; 
-            libsoc_gpio_set_level(c_params->pt_gpio_set->arm_gpio_led, LOW);
-            libsoc_gpio_set_level(c_params->pt_gpio_set->ign_gpio_led, LOW);
-            printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
-
-            int i;
-            
-            for(i=0; i<4; i++) 
-            {
-                if (i%2==0)libsoc_gpio_set_level(c_params->pt_gpio_set->reset_gpio_led, HIGH);
-                else libsoc_gpio_set_level(c_params->pt_gpio_set->reset_gpio_led, LOW);
-                sleep(1);
-            }
-    
-        }
-        else if(msg_send.command==ARM_CO){
-            c_params->connection_params->host_state=ARM;  
-            printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
-            libsoc_gpio_set_level(c_params->pt_gpio_set->arm_gpio_led, HIGH);
-
-        }
-        else if(msg_send.command==IGNITE_CO){
-            c_params->connection_params->host_state=IGNITE;  
-            printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
-            libsoc_gpio_set_level(c_params->pt_gpio_set->ign_gpio_led, HIGH);
-
-        }
-        else if(msg_send.command==SHUTDOWN_CO){
-            c_params->connection_params->host_state=SHUT_DOWN;  
-            printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
-
+        switch (msg_send.command)
+        {
+            case ZERO_CO:
+                c_params->connection_params->host_state=ZERO;
+                #ifndef NO_GPIO
+                    libsoc_gpio_set_level(c_params->pt_gpio_set->arm_gpio_led, LOW);
+                    libsoc_gpio_set_level(c_params->pt_gpio_set->ign_gpio_led, LOW);
+                    int i;
+                    for(i=0; i<4; i++) 
+                    {
+                        if (i%2==0)libsoc_gpio_set_level(c_params->pt_gpio_set->reset_gpio_led, HIGH);
+                        else libsoc_gpio_set_level(c_params->pt_gpio_set->reset_gpio_led, LOW);
+                        sleep(1);
+                    }
+                #endif
+                printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
+                break;
+            case ARM_CO:
+                c_params->connection_params->host_state=ARM;  
+                printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
+                #ifndef NO_GPIO
+                libsoc_gpio_set_level(c_params->pt_gpio_set->arm_gpio_led, HIGH);
+                #endif
+                break;
+            case IGNITE_CO:
+                c_params->connection_params->host_state=IGNITE;  
+                printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
+                #ifndef NO_GPIO
+                libsoc_gpio_set_level(c_params->pt_gpio_set->ign_gpio_led, HIGH);
+                #endif
+                break;
+            case SHUTDOWN_CO:
+                c_params->connection_params->host_state=SHUT_DOWN;  
+                printf("Client has changed to state = %d\n", c_params->connection_params->host_state);
+                break;
+            default:
+                printf("Unkown command. No action was executed.");
+                break;
         }
         return 0;
             
     }
     else{
         c_params->connection_params->host_state=SHUT_DOWN; 
-        printf("EXIT ater error on command_handshake()\n");
+        printf("EXIT due to  error on command_handshake()\n");
     }
     return 0;
 }
+
 
 
 int command_handshake(connection_params_t* params, wireless_data_t msg_send){
@@ -248,6 +214,83 @@ int close_client(connection_params_t* params){
     printf("\nprogram is shutting down..\n");
     return 0;
 }
+
+
+
+/// **********************
+/// GPIO RELETED METHODS
+///**************************
+
+
+#ifndef NO_GPIO
+gpio_set_t * start_gpios(connection_params_t* pt_connection_params, callback_params_t* pt_call_params){
+
+    printf("Starting gpio\n");
+    //libsoc_set_debug(1);
+    gpio_set_t* btn_gpios = malloc(sizeof(gpio_set_t)); 
+    MEMORY_ERROR(btn_gpios);
+
+    btn_gpios->con_gpio_led = start__led_gpio(LED_CON);
+    btn_gpios->arm_gpio_led = start__led_gpio(LED_ARM);
+    btn_gpios->ign_gpio_led = start__led_gpio(LED_IGN);
+    btn_gpios->reset_gpio_led = start__led_gpio(LED_RESET);
+    
+    (pt_call_params->con_callback).gpio_id = CONNECT_BTN_GPIO;
+    (pt_call_params->con_callback).connection_params = pt_connection_params;
+    (pt_call_params->arm_callback).gpio_id = ARM_BTN_GPIO;
+    (pt_call_params->arm_callback).connection_params = pt_connection_params;
+    (pt_call_params->ign_callback).gpio_id = IGN_BTN_GPIO;
+    (pt_call_params->ign_callback).connection_params = pt_connection_params;
+    (pt_call_params->reset_callback).gpio_id = RESET_BTN_GPIO;
+    (pt_call_params->reset_callback).connection_params = pt_connection_params;
+    (pt_call_params->shut_callback).gpio_id = SHUT_BTN_GPIO;
+    (pt_call_params->shut_callback).connection_params = pt_connection_params;
+
+    (pt_call_params->con_callback).pt_gpio_set = btn_gpios;
+    (pt_call_params->arm_callback).pt_gpio_set = btn_gpios;
+    (pt_call_params->ign_callback).pt_gpio_set = btn_gpios;
+    (pt_call_params->reset_callback).pt_gpio_set = btn_gpios;
+    (pt_call_params->shut_callback).pt_gpio_set = btn_gpios;
+   
+
+    btn_gpios->con_gpio_btn = start_individual_btn_gpio(&(pt_call_params->con_callback));
+    btn_gpios->arm_gpio_btn = start_individual_btn_gpio(&(pt_call_params->arm_callback));
+    btn_gpios->ign_gpio_btn = start_individual_btn_gpio(&(pt_call_params->ign_callback));
+    btn_gpios->reset_gpio_btn = start_individual_btn_gpio(&(pt_call_params->reset_callback));
+    btn_gpios->shut_gpio_btn = start_individual_btn_gpio(&(pt_call_params->shut_callback));
+
+    return btn_gpios;
+}
+
+gpio* start__led_gpio(int led_id){
+
+    gpio* new_gpio = libsoc_gpio_request(led_id, LS_GPIO_SHARED);
+	if (new_gpio == NULL ) printf("gpio were Unsuccessfully requested\n");
+	libsoc_gpio_set_direction(new_gpio, OUTPUT);
+	if (libsoc_gpio_get_direction(new_gpio) != OUTPUT)printf("Failed to set direction to INPUT\n");
+    libsoc_gpio_set_level(new_gpio, LOW);
+	if (libsoc_gpio_get_level(new_gpio) != LOW) printf("Failed setting gpio level HIGH\n");
+
+    return new_gpio;
+}
+
+gpio* start_individual_btn_gpio(individual_callback_params_t* pt_ind_call_params){
+
+    gpio* new_gpio = libsoc_gpio_request(pt_ind_call_params->gpio_id, LS_GPIO_SHARED);
+	if (new_gpio == NULL ) printf("gpio were Unsuccessfully requested\n");
+	libsoc_gpio_set_direction(new_gpio, INPUT);
+	if (libsoc_gpio_get_direction(new_gpio) != INPUT)printf("Failed to set direction to INPUT\n");
+
+    libsoc_gpio_set_edge(new_gpio, RISING);
+  	if (libsoc_gpio_get_edge(new_gpio) != RISING) printf("Failed to set edge to RISING\n");
+
+
+  	int res = libsoc_gpio_callback_interrupt(new_gpio, &callback_con, (void *) pt_ind_call_params);
+	if (res == EXIT_FAILURE) perror("Failed to set gpio callback");
+    return new_gpio;
+}
+
+
 int close_gpio(gpio_set_t *  btn_gpios){
 
     libsoc_gpio_set_level(btn_gpios->con_gpio_led, LOW);
@@ -281,6 +324,7 @@ int close_gpio(gpio_set_t *  btn_gpios){
 
     return 0;
 }
+#endif
 
 
 
