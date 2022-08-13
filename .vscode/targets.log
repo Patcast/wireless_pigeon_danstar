@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,11 +6,11 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Aug 13 10:35:50 2022
+# Make data base, printed on Sat Aug 13 11:36:20 2022
 
 # Variables
 
-# 'override' directive
+# environment
 GNUMAKEFLAGS := 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
@@ -45,7 +43,7 @@ GDMSESSION = ubuntu
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /home/hurricane97/Documents/dtu/danStar/software_ignition/tsl_com
+CURDIR := /home/hurricane97/Documents/dtu/danStar/integration/danstar_code
 # makefile
 SHELL = /bin/sh
 # environment
@@ -62,8 +60,6 @@ SNAP_INSTANCE_NAME = code
 SNAP_ARCH = amd64
 # makefile (from 'Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
-# makefile (from 'Makefile', line 11)
-CLIENT_COMPILING = conn_mgr.c client_main.c client_mgr.c -o build/client_test 
 # automatic
 @F = $(notdir $@)
 # environment
@@ -88,8 +84,6 @@ LC_NAME = en_GB.UTF-8
 VSCODE_CWD = /home/hurricane97
 # environment
 GSETTINGS_SCHEMA_DIR = /snap/code/102/usr/share/glib-2.0/schemas
-# makefile (from 'Makefile', line 8)
-CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -116,8 +110,6 @@ XDG_MENU_PREFIX = gnome-
 DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
-# makefile (from 'Makefile', line 6)
-PORT = 85354
 # environment
 INVOCATION_ID = 69a6395c6161402f9638034271140064
 # environment
@@ -131,7 +123,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 138441
+GIO_LAUNCHED_DESKTOP_FILE_PID = 146346
 # automatic
 %F = $(notdir $%)
 # environment
@@ -141,7 +133,7 @@ CONDA_EXE = /home/hurricane97/anaconda3/bin/conda
 # environment
 SNAP_INSTANCE_KEY = 
 # environment
-PWD = /home/hurricane97/Documents/dtu/danStar/software_ignition/tsl_com
+PWD = /home/hurricane97/Documents/dtu/danStar/integration/danstar_code
 # default
 .LOADED := 
 # environment
@@ -163,7 +155,7 @@ VSCODE_CODE_CACHE_PATH = /home/hurricane97/.config/Code/CachedData/3b889b090b5ad
 # environment
 LOGNAME = hurricane97
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # environment
@@ -200,8 +192,6 @@ QT_IM_MODULE = ibus
 SNAP_USER_DATA = /home/hurricane97/snap/code/102
 # environment
 SHLVL = 0
-# makefile (from 'Makefile', line 10)
-SERVER_COMPILING = server_mgr.c server_main.c conn_mgr.c -o build/server_test 
 # makefile (from 'Makefile', line 5)
 SERVER_IP = 127.0.0.1
 # environment
@@ -226,8 +216,6 @@ LC_TELEPHONE = en_GB.UTF-8
 CONDA_SHLVL = 1
 # default
 MAKE_COMMAND := make
-# makefile (from 'Makefile', line 7)
-SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure
 # default
 .VARIABLES := 
 # automatic
@@ -256,20 +244,14 @@ LC_PAPER = en_GB.UTF-8
 LC_IDENTIFICATION = en_GB.UTF-8
 # environment
 QT_ACCESSIBILITY = 1
-# makefile (from 'Makefile', line 12)
-GPI0_COMPILING = gpio_handler.c 
 # default
 MAKEFILES := 
-# makefile (from 'Makefile', line 9)
-FAKE_CLIENT = $(SERVER_IP) $(PORT) fake/fake_client.crt fake/fake_client_rsa_private.pem.unsecure
 # environment
 SNAP_COOKIE = EVj6J6THYJZIuBCWhLdxkMugrhyMDyypQELcD_GSVDJp9EwkfAYG
 # environment
 LC_NUMERIC = en_GB.UTF-8
 # automatic
 <F = $(notdir $<)
-# makefile (from 'Makefile', line 13)
-DEBUG_FLAGS = -DNO_GPIO
 # environment
 PS1 = \[\e[32;1m\]\W\[\e[0m\] $ 
 # environment
@@ -286,7 +268,6 @@ GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 ^F = $(notdir $^)
 # default
 SUFFIXES := 
- 
 # makefile (from 'Makefile', line 4)
 FLAGS = -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto -lsoc
 # environment
@@ -297,6 +278,9 @@ _CE_M =
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
 WINDOWPATH = 2
+ 
+Makefile:6: *** missing separator.  Stop.
+
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
@@ -308,11 +292,11 @@ LC_ADDRESS = en_GB.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 138486
+VSCODE_PID = 146392
 # environment
 _CE_CONDA = 
 # variable set hash-table stats:
-# Load=149/1024=15%, Rehash=0, Collisions=25/174=14%
+# Load=141/1024=14%, Rehash=0, Collisions=21/155=14%
 
 # Pattern-specific Variable Values
 
@@ -320,7 +304,7 @@ _CE_CONDA =
 
 # Directories
 
-# . (device 66308, inode 4849713): 33 files, no impossibilities.
+# . (device 66308, inode 6689825): 33 files, no impossibilities.
 
 # 33 files, no impossibilities in 1 directories.
 
@@ -330,116 +314,18 @@ _CE_CONDA =
 
 # Files
 
-non_gpio_server:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 30):
-	@echo -e '\n**********************************'
-	@echo -e '*** Compiling for NON_GPIO_SERVER **'
-	@echo -e '************************************'
-	@mkdir -p build
-	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING) $(DEBUG_FLAGS) -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
-	@echo -e '\n******************************'
-	@echo -e '*** Running NON_GPIO_SERVER  ***'
-	@echo -e '********************************'
-	@sudo ./build/server_test $(SERVER_PARAM)
-
-debug_non_gpio_client:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 64):
-	@echo -e '\n*******************************'
-	@echo -e '*** Compiling for UNIT TEST ***'
-	@echo -e '*******************************'
-	@mkdir -p build
-	@gcc  -g $(CLIENT_COMPILING) $(DEBUG_FLAGS) -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
-	@echo -e '\n*************************'
-	@echo -e '*** Running CLIENT UNIT TEST ***'
-	@echo -e '*************************'
-	@sudo gdb -q -tui ./build/client_test $(CLIENT_PARAM)
-
 # Not a target:
 all:
 #  Command line target.
-#  Implicit rule search has been done.
-#  File does not exist.
-#  File has not been updated.
-
-client:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 42):
-	@echo -e '\n*******************************'
-	@echo -e '*** Compiling for UNIT TEST ***'
-	@echo -e '*******************************'
-	@mkdir -p build
-	@gcc  $(CLIENT_COMPILING) $(FLAGS)
-	@echo -e '\n*************************'
-	@echo -e '*** Running CLIENT UNIT TEST ***'
-	@echo -e '*************************'
-	@sudo ./build/client_test $(CLIENT_PARAM) 
-
-zip:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 117):
-	zip lab7_ex2.zip connmgr.c  errmacros.h connmgr.h config.h lib/dplist.c lib/dplist.h lib/tcpsock.c lib/tcpsock.h
-
-debug_server:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 86):
-	@echo -e '\n*******************************'
-	@echo -e '*** Compiling for UNIT TEST ***'
-	@echo -e '*******************************'
-	@mkdir -p build
-	@gcc -g  $(SERVER_COMPILING)  $(FLAGS)
-	@echo -e '\n*************************'
-	@echo -e '*** Running DEBUGGER ***'
-	@echo -e '*************************'
-	@gdb -q -tui ./build/server_test $(SERVER_PARAM)
 
 # Not a target:
 Makefile:
-#  Implicit rule search has been done.
-#  Last modified 2022-08-08 11:07:33.448664425
-#  File has been updated.
-#  Successfully updated.
-
-server:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 18):
-	@echo -e '\n******************************'
-	@echo -e '*** Compiling for UNIT TEST ***'
-	@echo -e '*******************************'
-	@mkdir -p build
-	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING) $(FLAGS)
-	@echo -e '\n******************************'
-	@echo -e '*** Running SERVER UNIT TEST ***'
-	@echo -e '********************************'
-	@sudo ./build/server_test $(SERVER_PARAM)
-
-fake_client:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 75):
-	@echo -e '\n*******************************'
-	@echo -e '*** Compiling for UNIT TEST ***'
-	@echo -e '*******************************'
-	@mkdir -p build
-	@gcc  $(CLIENT_COMPILING) $(FLAGS)
-	@echo -e '\n*************************'
-	@echo -e '*** Running FAKE CLIENT UNIT TEST ***'
-	@echo -e '*************************'
-	@sudo ./build/client_test $(FAKE_CLIENT) 
 
 # Not a target:
 .DEFAULT:
@@ -447,63 +333,20 @@ fake_client:
 #  Modification time never checked.
 #  File has not been updated.
 
-valgrind_client:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 106):
-	@echo -e '\n*******************************'
-	@echo -e '*** Compiling for UNIT TEST ***'
-	@echo -e '*******************************'
-	@mkdir -p build
-	@gcc -g  $(CLIENT_COMPILING) $(FLAGS)
-	@echo -e '*** Running VALGRIND TEST ***'
-	@echo -e '*************************'
-	@valgrind -s --leak-check=full ./build/server_test $(CLIENT_PARAM)
-
-non_gpio_client:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 53):
-	@echo -e '\n*******************************'
-	@echo -e '*** Compiling for UNIT TEST ***'
-	@echo -e '*******************************'
-	@mkdir -p build
-	@gcc  $(CLIENT_COMPILING) $(DEBUG_FLAGS) -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
-	@echo -e '\n*************************'
-	@echo -e '*** Running CLIENT UNIT TEST ***'
-	@echo -e '*************************'
-	@sudo ./build/client_test $(CLIENT_PARAM)
-
-valgrind_server:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 96):
-	@echo -e '\n*******************************'
-	@echo -e '*** Compiling for UNIT TEST ***'
-	@echo -e '*******************************'
-	@mkdir -p build
-	@gcc -g  $(SERVER_COMPILING)  $(FLAGS)
-	@echo -e '*** Running VALGRIND TEST ***'
-	@echo -e '*************************'
-	@valgrind  --show-leak-kinds=all ./build/server_test $(SERVER_PARAM)
-
 # files hash-table stats:
-# Load=14/1024=1%, Rehash=0, Collisions=0/24=0%
+# Load=4/1024=0%, Rehash=0, Collisions=0/5=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 48 / storage = 534 B / avg = 11 B
-# current buf: size = 8162 B / used = 534 B / count = 48 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 38 / storage = 408 B / avg = 10 B
+# current buf: size = 8162 B / used = 408 B / count = 38 / avg = 10 B
 
-# strcache performance: lookups = 62 / hit rate = 22%
+# strcache performance: lookups = 42 / hit rate = 9%
 # hash-table stats:
-# Load=48/8192=1%, Rehash=0, Collisions=1/62=2%
-# Finished Make data base on Sat Aug 13 10:35:50 2022
+# Load=38/8192=0%, Rehash=0, Collisions=1/42=2%
+# Finished Make data base on Sat Aug 13 11:36:20 2022
 
  
