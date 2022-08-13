@@ -1,7 +1,12 @@
 #include "conn_mgr.h"
 
+<<<<<<< HEAD
+#define ARM_SIGNAL 0xFA
+#define IGNITE_SIGNAL 0x1B
+=======
 #define ARM_SIGNAL 0x1B
 #define IGNITE_SIGNAL 0x35
+>>>>>>> 165ed2bb818efffe793f1961570760990461c440
 
 #define CONNECT_BTN_GPIO    30
 #define ARM_BTN_GPIO        31
