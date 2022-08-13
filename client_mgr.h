@@ -2,8 +2,8 @@
 #include "libsoc_gpio.h"
 #include "libsoc_debug.h" 
 
-#define ARM_SIGNAL 0xFF
-#define IGNITE_SIGNAL 0xFF
+#define ARM_SIGNAL 0xFA
+#define IGNITE_SIGNAL 0x1B
 
 #define CONNECT_BTN_GPIO    30
 #define ARM_BTN_GPIO        31
