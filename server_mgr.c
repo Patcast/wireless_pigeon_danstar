@@ -176,7 +176,7 @@ int start_gpio( gpio_set_t* led_set){
         led_set->arm3_led = start__led_gpio(PIN_ARM_3);
         led_set->arm4_led = start__led_gpio(PIN_ARM_4);
         led_set->arm5_led = start__led_gpio(PIN_ARM_5);
-        led_set->arm5_led = start__led_gpio(PIN_ARM_6);
+        led_set->arm6_led = start__led_gpio(PIN_ARM_6);
 
         led_set->con1_led = start__led_gpio(PIN_IGN_1);
         led_set->con2_led = start__led_gpio(PIN_IGN_2);
