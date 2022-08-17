@@ -53,7 +53,7 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
         }while(conn_params->host_state != SHUT_DOWN);
     #else 
         printf("\n\nGPIOs are used\n\n");
-        gpio_set_t *  btn_gpios = start_gpios(conn_params,&pt_call_params);
+        gpio_set_t *  btn_gpios = start_gpios(conn_params, &pt_call_params);
         if (btn_gpios==NULL) printf("btn_gpios is null");
         do{
             sleep(1);

@@ -167,7 +167,8 @@ int set_gpio_ign(u_int8_t ign_signal,gpio_set_t* led_set){
 int start_gpio( gpio_set_t* led_set){
 
     #ifndef NO_GPIO
-
+        printf("Starting GPIO...\n");
+        libsoc_set_debug(1);
         led_set->arm1_led = start__led_gpio(PIN_ARM_1);
         led_set->arm2_led = start__led_gpio(PIN_ARM_2);
         led_set->arm3_led = start__led_gpio(PIN_ARM_3);
@@ -182,13 +183,14 @@ int start_gpio( gpio_set_t* led_set){
         led_set->con1_led = start__led_gpio(PIN_IGN_5);
         led_set->con1_led = start__led_gpio(PIN_IGN_6);
     #else
-        printf("Starting GPIO...\n");       
+        printf("Starting NNNNNo GPIO...\n");       
     #endif
     return 0;
 }
 
 int reset_gpio(gpio_set_t* led_set){
      #ifndef NO_GPIO 
+        printf("GPIOs were reseted\n\n");
         libsoc_gpio_set_level(led_set->arm1_led, LOW);
         libsoc_gpio_set_level(led_set->arm2_led, LOW);
         libsoc_gpio_set_level(led_set->arm3_led, LOW);
@@ -203,7 +205,7 @@ int reset_gpio(gpio_set_t* led_set){
         libsoc_gpio_set_level(led_set->con5_led, LOW);
         libsoc_gpio_set_level(led_set->con6_led, LOW);
     #else 
-        printf("GPIOs were reseted\n\n");
+        printf("NNNNNNNo GPIOs were reseted\n\n");
     #endif
 }
 
@@ -238,7 +240,7 @@ int close_gpio(gpio_set_t* led_set){
 }
 #ifndef NO_GPIO
 gpio* start__led_gpio(int led_id){
-
+    
     gpio* new_gpio = libsoc_gpio_request(led_id, LS_GPIO_SHARED);
 	if (new_gpio == NULL ) printf("gpio were Unsuccessfully requested\n");
 	libsoc_gpio_set_direction(new_gpio, OUTPUT);

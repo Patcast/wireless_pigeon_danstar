@@ -2,7 +2,7 @@
 
 
 FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto -lsoc
-SERVER_IP = 127.0.0.1
+SERVER_IP = 192.168.192.218
 PORT = 85354
 SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure
 CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure

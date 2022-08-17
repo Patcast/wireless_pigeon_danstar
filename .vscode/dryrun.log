@@ -1,4 +1,4 @@
-make --dry-run --always-make --keep-going --print-directory
+make --dry-run --keep-going --print-directory
 make: Entering directory '/home/hurricane97/Documents/dtu/danStar/integration/danstar_code'
 echo -e '\n*******************************'
 echo -e '*** Compiling for UNIT TEST ***'
@@ -8,6 +8,6 @@ gcc  conn_mgr.c client_main.c client_mgr.c -o build/client_test  -DNO_GPIO -std=
 echo -e '\n*************************'
 echo -e '*** Running CLIENT UNIT TEST ***'
 echo -e '*************************'
-sudo ./build/client_test 127.0.0.1 85354 keys/client.crt keys/client_rsa_private.pem.unsecure
+sudo ./build/client_test 192.168.192.218 85354 keys/client.crt keys/client_rsa_private.pem.unsecure
 make: Leaving directory '/home/hurricane97/Documents/dtu/danStar/integration/danstar_code'
  
