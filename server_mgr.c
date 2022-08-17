@@ -119,12 +119,12 @@ int set_gpio_arm(u_int8_t arm_signal,gpio_set_t* led_set){
         printf("\nARMsignal as received: %d\n",arm_signal);
         unsigned char bit1,bit2,bit3,bit4,bit5,bit6;
 
-        bit6 = (arm_signal & FLAG_SIGNAL_6) ? 1 : 0; 
-        bit5 = (arm_signal & FLAG_SIGNAL_5) ? 1 : 0;
-        bit4 = (arm_signal & FLAG_SIGNAL_4) ? 1 : 0;
-        bit3 = (arm_signal & FLAG_SIGNAL_3) ? 1 : 0;
-        bit2 = (arm_signal & FLAG_SIGNAL_2) ? 1 : 0;
-        bit1 = (arm_signal & FLAG_SIGNAL_1) ? 1 : 0;
+        bit1 = (arm_signal & FLAG_SIGNAL_6) ? 1 : 0; 
+        bit2 = (arm_signal & FLAG_SIGNAL_5) ? 1 : 0;
+        bit3 = (arm_signal & FLAG_SIGNAL_4) ? 1 : 0;
+        bit4 = (arm_signal & FLAG_SIGNAL_3) ? 1 : 0;
+        bit5 = (arm_signal & FLAG_SIGNAL_2) ? 1 : 0;
+        bit6 = (arm_signal & FLAG_SIGNAL_1) ? 1 : 0;
 
         printf ("ARM signal porcessed:%d%d%d%d%d%d\n",bit6,bit5,bit4,bit3,bit2,bit1);
 
@@ -144,12 +144,12 @@ int set_gpio_ign(u_int8_t ign_signal,gpio_set_t* led_set){
         printf("\nIGN signal as received: %d\n",ign_signal);
         unsigned char bit1,bit2,bit3,bit4,bit5,bit6;
 
-        bit6 = (ign_signal & FLAG_SIGNAL_6) ? 1 : 0; 
-        bit5 = (ign_signal & FLAG_SIGNAL_5) ? 1 : 0;
-        bit4 = (ign_signal & FLAG_SIGNAL_4) ? 1 : 0;
-        bit3 = (ign_signal & FLAG_SIGNAL_3) ? 1 : 0;
-        bit2 = (ign_signal & FLAG_SIGNAL_2) ? 1 : 0;
-        bit1 = (ign_signal & FLAG_SIGNAL_1) ? 1 : 0;
+        bit1 = (ign_signal & FLAG_SIGNAL_6) ? 1 : 0; 
+        bit2 = (ign_signal & FLAG_SIGNAL_5) ? 1 : 0;
+        bit3 = (ign_signal & FLAG_SIGNAL_4) ? 1 : 0;
+        bit4 = (ign_signal & FLAG_SIGNAL_3) ? 1 : 0;
+        bit5 = (ign_signal & FLAG_SIGNAL_2) ? 1 : 0;
+        bit6 = (ign_signal & FLAG_SIGNAL_1) ? 1 : 0;
 
         printf ("IGN signal porcessed:%d%d%d%d%d%d\n",bit6,bit5,bit4,bit3,bit2,bit1);
 
