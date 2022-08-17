@@ -5,6 +5,8 @@ int run_server(int myport_input, const char* certificate_input, const char* priv
     
     gpio_set_t led_set;
 
+     memset(&led_set, 0 , sizeof(gpio_set_t));
+
     connection_params_t* params = malloc(sizeof(connection_params_t));
     MEMORY_ERROR( params);
     params->host_state = NOT_CONNECTED;
@@ -240,7 +242,7 @@ int close_gpio(gpio_set_t* led_set){
 }
 #ifndef NO_GPIO
 gpio* start__led_gpio(int led_id){
-    
+
     gpio* new_gpio = libsoc_gpio_request(led_id, LS_GPIO_SHARED);
 	if (new_gpio == NULL ) printf("gpio were Unsuccessfully requested\n");
 	libsoc_gpio_set_direction(new_gpio, OUTPUT);
