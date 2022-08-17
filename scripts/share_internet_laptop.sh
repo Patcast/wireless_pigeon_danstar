@@ -16,4 +16,4 @@ sudo iptables --table nat --append POSTROUTING --out-interface wlp12s0 -j MASQUE
 #read bbb_name
 #sudo iptables --append FORWARD --in-interface $bbb_name -j ACCEPT
 
-sudo iptables --append FORWARD --in-interface enx38d269393db0  -j ACCEPT
+sudo iptables --append FORWARD --in-interface enp0s25  -j ACCEPT
