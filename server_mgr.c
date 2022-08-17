@@ -211,28 +211,28 @@ int close_gpio(gpio_set_t* led_set){
     #ifndef NO_GPIO
         int res = libsoc_gpio_free(led_set->arm1_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->arm2_led);
+        res = libsoc_gpio_free(led_set->arm2_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->arm3_led);
+        res = libsoc_gpio_free(led_set->arm3_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->arm4_led);
+        res = libsoc_gpio_free(led_set->arm4_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->arm5_led);
+        res = libsoc_gpio_free(led_set->arm5_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->arm6_led);
+        res = libsoc_gpio_free(led_set->arm6_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
 
-        int res = libsoc_gpio_free(led_set->con1_led);
+        res = libsoc_gpio_free(led_set->con1_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->con2_led);
+        res = libsoc_gpio_free(led_set->con2_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->con3_led);
+        res = libsoc_gpio_free(led_set->con3_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->con4_led);
+        res = libsoc_gpio_free(led_set->con4_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->con5_led);
+        res = libsoc_gpio_free(led_set->con5_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->con6_led);
+        res = libsoc_gpio_free(led_set->con6_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
     #endif
 }
