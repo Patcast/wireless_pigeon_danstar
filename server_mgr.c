@@ -213,6 +213,7 @@ int reset_gpio(gpio_set_t* led_set){
 
 int close_gpio(gpio_set_t* led_set){
     #ifndef NO_GPIO
+        reset_gpio(led_set);
         int res = libsoc_gpio_free(led_set->arm1_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
         res = libsoc_gpio_free(led_set->arm2_led);
