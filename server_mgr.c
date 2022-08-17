@@ -179,11 +179,11 @@ int start_gpio( gpio_set_t* led_set){
         led_set->arm5_led = start__led_gpio(PIN_ARM_6);
 
         led_set->con1_led = start__led_gpio(PIN_IGN_1);
-        led_set->con1_led = start__led_gpio(PIN_IGN_2);
-        led_set->con1_led = start__led_gpio(PIN_IGN_3);
-        led_set->con1_led = start__led_gpio(PIN_IGN_4);
-        led_set->con1_led = start__led_gpio(PIN_IGN_5);
-        led_set->con1_led = start__led_gpio(PIN_IGN_6);
+        led_set->con2_led = start__led_gpio(PIN_IGN_2);
+        led_set->con3_led = start__led_gpio(PIN_IGN_3);
+        led_set->con4_led = start__led_gpio(PIN_IGN_4);
+        led_set->con5_led = start__led_gpio(PIN_IGN_5);
+        led_set->con6_led = start__led_gpio(PIN_IGN_6);
     #else
         printf("Starting NNNNNo GPIO...\n");       
     #endif
