@@ -3,11 +3,11 @@
 #define ARM_SIGNAL 0x1B
 #define IGNITE_SIGNAL 0x35
 
-#define CONNECT_BTN_GPIO    30
-#define ARM_BTN_GPIO        31
-#define IGN_BTN_GPIO        3
-#define RESET_BTN_GPIO      115
-#define SHUT_BTN_GPIO       49
+#define CONNECT_BTN_GPIO    30  // P9_11
+#define ARM_BTN_GPIO        31  // P9_13
+#define IGN_BTN_GPIO        48  // P9_15
+#define RESET_BTN_GPIO      3   // P9_21
+#define SHUT_BTN_GPIO       49  // P9_23
 
 #define LED_CON     86
 #define LED_ARM     87 

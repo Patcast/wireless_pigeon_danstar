@@ -226,7 +226,7 @@ int close_client(connection_params_t* params){
 gpio_set_t * start_gpios(connection_params_t* pt_connection_params, callback_params_t* pt_call_params){
 
     printf("Starting gpio\n");
-    //libsoc_set_debug(1);
+    libsoc_set_debug(1);
     gpio_set_t* btn_gpios = malloc(sizeof(gpio_set_t)); 
     MEMORY_ERROR(btn_gpios);
 
