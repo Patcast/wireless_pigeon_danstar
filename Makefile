@@ -25,6 +25,13 @@ server:
 	@echo -e '********************************'
 	@sudo ./build/server_test $(SERVER_PARAM)
 
+run_server:
+	@echo -e '\n******************************'
+	@echo -e '*** Running SERVER UNIT TEST ***'
+	@echo -e '********************************'
+	@sudo ./build/server_test $(SERVER_PARAM)
+
+
 
 non_gpio_server:
 	@echo -e '\n**********************************'
@@ -36,6 +43,7 @@ non_gpio_server:
 	@echo -e '*** Running NON_GPIO_SERVER  ***'
 	@echo -e '********************************'
 	@sudo ./build/server_test $(SERVER_PARAM)
+
 
 
 client: 
