@@ -26,11 +26,11 @@ int callback_con(void* arg)
 #endif
 
 
-int run_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input){
+int run_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input, const char* ca_cert){
 
     callback_params_t pt_call_params;
 
-    connection_params_t* conn_params = start_client(ip_address_input,  myport_input, certificate_input, priv_key_input);
+    connection_params_t* conn_params = start_client(ip_address_input,  myport_input, certificate_input, priv_key_input,ca_cert);
     if(conn_params == NULL)return 1;
     
     #ifdef NO_GPIO 
@@ -190,7 +190,7 @@ int command_handshake(connection_params_t* params, wireless_data_t msg_send){
     return 0;
 }
 
-connection_params_t*  start_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input){
+connection_params_t*  start_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input,const char* ca_cert){
     // Start parameters that are used in the connection.
     connection_params_t* params = malloc(sizeof(connection_params_t));
     MEMORY_ERROR( params);
@@ -200,6 +200,7 @@ connection_params_t*  start_client(const char* ip_address_input, const int mypor
     params->host_certificate = certificate_input;
     params->host_key = priv_key_input;
     params->host_is_client = TRUE;
+    params->ca_cert= ca_cert;
 
     if (star_host_connection(params)){ /// This part only needs to be done once.
         printf("error starting host\n");
@@ -226,7 +227,7 @@ int close_client(connection_params_t* params){
 gpio_set_t * start_gpios(connection_params_t* pt_connection_params, callback_params_t* pt_call_params){
 
     printf("Starting gpio\n");
-    libsoc_set_debug(1);
+    //libsoc_set_debug(1);
     gpio_set_t* btn_gpios = malloc(sizeof(gpio_set_t)); 
     MEMORY_ERROR(btn_gpios);
 

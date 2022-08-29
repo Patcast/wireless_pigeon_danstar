@@ -1,7 +1,7 @@
 #include "server_mgr.h"
 
 
-int run_server(int myport_input, const char* certificate_input, const char* priv_key_input){
+int run_server(int myport_input, const char* certificate_input, const char* priv_key_input, const char* ca_cert){
     
     gpio_set_t led_set;
 
@@ -14,6 +14,7 @@ int run_server(int myport_input, const char* certificate_input, const char* priv
     params->host_certificate = certificate_input;
     params->host_key = priv_key_input;
     params->host_is_client = FALSE;
+    params->ca_cert= ca_cert;
 
     #ifdef NO_GPIO 
         printf("\n\nNo GPIOs are used\n\n");

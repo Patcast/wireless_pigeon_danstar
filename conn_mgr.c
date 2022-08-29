@@ -16,14 +16,14 @@ int star_host_connection (connection_params_t* params){
     }
 
     SSL_CTX_set_verify(params->host_ctx, SSL_VERIFY_PEER|SSL_VERIFY_FAIL_IF_NO_PEER_CERT, NULL);
-    if (SSL_CTX_load_verify_locations(params->host_ctx, "keys/ca.crt",NULL)<=0){ 
-        printf("error on root");
+    if (SSL_CTX_load_verify_locations(params->host_ctx,params->ca_cert,NULL)<=0){ 
+        printf("error on root\n");
         ERR_print_errors_fp(stdout);
         return 1;
     }
     // TODO: Add else if to remove returns 
     if (SSL_CTX_use_certificate_file(params->host_ctx,params->host_certificate, SSL_FILETYPE_PEM) <= 0) {
-        printf("error on client cert");
+        printf("error on client cert\n");
         ERR_print_errors_fp(stdout);
         return 1;
     }
@@ -36,7 +36,7 @@ int star_host_connection (connection_params_t* params){
         return 1;
     }
        if ((params->host_fd= socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("Error creating socket");
+        perror("Error creating socket\n");
         return 1;
     }
     printf("socket created\n");

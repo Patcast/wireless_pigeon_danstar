@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Aug 20 23:33:25 2022
+# Make data base, printed on Mon Aug 29 12:07:21 2022
 
 # Variables
 
@@ -87,7 +89,7 @@ VSCODE_CWD = /home/hurricane97
 # environment
 GSETTINGS_SCHEMA_DIR = /snap/code/104/usr/share/glib-2.0/schemas
 # makefile (from 'Makefile', line 8)
-CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure
+CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure keys/ca.crt 
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -129,7 +131,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 288978
+GIO_LAUNCHED_DESKTOP_FILE_PID = 396737
 # automatic
 %F = $(notdir $%)
 # environment
@@ -225,7 +227,7 @@ CONDA_SHLVL = 1
 # default
 MAKE_COMMAND := make
 # makefile (from 'Makefile', line 7)
-SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure
+SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure keys/ca.crt 
 # default
 .VARIABLES := 
 # automatic
@@ -291,6 +293,7 @@ SNAP_REEXEC =
 # environment
 _CE_M = 
 # environment
+ 
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
 WINDOWPATH = 2
@@ -300,15 +303,12 @@ WINDOWPATH = 2
 GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
- 
-make: *** No rule to make target 'all'.  Stop.
-
 # environment
 LC_ADDRESS = en_GB.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 289028
+VSCODE_PID = 396785
 # environment
 _CE_CONDA = 
 # variable set hash-table stats:
@@ -377,7 +377,7 @@ zip:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-17 19:35:23.008180391
+#  Last modified 2022-08-29 12:07:02.158074651
 #  File has been updated.
 #  Successfully updated.
 
@@ -494,6 +494,6 @@ valgrind_server:
 # strcache performance: lookups = 63 / hit rate = 22%
 # hash-table stats:
 # Load=49/8192=1%, Rehash=0, Collisions=1/63=2%
-# Finished Make data base on Sat Aug 20 23:33:25 2022
+# Finished Make data base on Mon Aug 29 12:07:21 2022
 
  

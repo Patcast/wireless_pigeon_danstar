@@ -4,8 +4,8 @@
 FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto 
 SERVER_IP = 192.168.192.218
 PORT = 85354
-SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure
-CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure
+SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure keys/ca.crt 
+CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure keys/ca.crt 
 FAKE_CLIENT = $(SERVER_IP) $(PORT) fake/fake_client.crt fake/fake_client_rsa_private.pem.unsecure
 SERVER_COMPILING = server_mgr.c server_main.c conn_mgr.c  
 CLIENT_COMPILING = conn_mgr.c client_main.c client_mgr.c 

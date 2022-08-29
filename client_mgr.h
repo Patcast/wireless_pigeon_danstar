@@ -49,7 +49,7 @@ typedef struct callback_params {
 
 typedef enum buttons_cmd{BTN_CONNECT =0,BTN_ZERO, BTN_ARM, BTN_IGNITE,BTN_SHUT_DOWN_SERVER,BTN_SHUT_DOWN_CLIENT} btn_pressed_t; //TODO: Add connect button, also 
 
-int run_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input);
+int run_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input, const char* ca_cert);
 
 gpio_set_t * start_gpios(connection_params_t* pt_connection_params, callback_params_t* pt_call_params);
 gpio* start_individual_btn_gpio(individual_callback_params_t* );
@@ -58,6 +58,6 @@ int connect_with_rocket(connection_params_t* params,commands_t command,status_t 
 int select_state(btn_pressed_t input,individual_callback_params_t *  c_params);
 int execute_command(individual_callback_params_t *  c_params,commands_t command,status_t cmd_status,u_int8_t  instruction_code);
 int command_handshake(connection_params_t* params, wireless_data_t msg_send);
-connection_params_t*  start_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input);
+connection_params_t*  start_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input, const char* ca_cert);
 int close_client(connection_params_t* params);
 int close_gpio(gpio_set_t *  btn_gpios);
