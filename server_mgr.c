@@ -240,6 +240,7 @@ int close_gpio(gpio_set_t* led_set){
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
         res = libsoc_gpio_free(led_set->con6_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
+        system("reboot");
     #endif
 }
 #ifndef NO_GPIO
