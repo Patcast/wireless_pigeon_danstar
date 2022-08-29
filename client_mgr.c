@@ -44,7 +44,7 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
             if(btn == BTN_CONNECT){
                     if(connect_with_rocket(conn_params,ZERO_CO,REQUESTED,0)==0){
                             do{
-                                printf("\nType the code of the button:\nBTN_CONNECT=\t30\nBTN_RESET=\t115\nBTN_ARM=\t31\nBTN_IGNITE=\t3\nBTN_SHUT_DOWN=\t49\n");
+                                printf("\nType the id of the button:\nBTN_CONNECT=\t30\nBTN_RESET=\t3\nBTN_ARM=\t31\nBTN_IGNITE=\t38\nBTN_SHUT_DOWN=\t49\n");
                                 scanf("%d",(int*) &btn);
                                 select_state(btn,&c_params);
                             }while(conn_params->host_state != SHUT_DOWN);
