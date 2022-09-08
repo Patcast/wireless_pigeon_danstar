@@ -1,5 +1,5 @@
 
-(trap 'kill 0' SIGINT; /home/debian/rocket_server/scripts/rs422_ignition_box.sh & /home/debian/rocket_server/scripts/ignition_box.sh)
+(trap 'kill 0' SIGINT; /home/debian/ignition_box/scripts/rs422_ignition_box.sh & /home/debian/ignition_box/scripts/ignition_box.sh)
 
 
 
