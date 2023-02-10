@@ -1,18 +1,13 @@
 #include "conn_mgr.h"
 
-<<<<<<< HEAD
-#define ARM_SIGNAL 0xFA
-#define IGNITE_SIGNAL 0x1B
-=======
 #define ARM_SIGNAL 0x1B
 #define IGNITE_SIGNAL 0x35
->>>>>>> 165ed2bb818efffe793f1961570760990461c440
 
-#define CONNECT_BTN_GPIO    30
-#define ARM_BTN_GPIO        31
-#define IGN_BTN_GPIO        3
-#define RESET_BTN_GPIO      115
-#define SHUT_BTN_GPIO       49
+#define CONNECT_BTN_GPIO    30  // P9_11
+#define ARM_BTN_GPIO        31  // P9_13
+#define IGN_BTN_GPIO        48  // P9_15
+#define RESET_BTN_GPIO      3   // P9_21
+#define SHUT_BTN_GPIO       49  // P9_23
 
 #define LED_CON     86
 #define LED_ARM     87 
@@ -54,7 +49,7 @@ typedef struct callback_params {
 
 typedef enum buttons_cmd{BTN_CONNECT =0,BTN_ZERO, BTN_ARM, BTN_IGNITE,BTN_SHUT_DOWN_SERVER,BTN_SHUT_DOWN_CLIENT} btn_pressed_t; //TODO: Add connect button, also 
 
-int run_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input);
+int run_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input, const char* ca_cert);
 
 gpio_set_t * start_gpios(connection_params_t* pt_connection_params, callback_params_t* pt_call_params);
 gpio* start_individual_btn_gpio(individual_callback_params_t* );
@@ -63,6 +58,6 @@ int connect_with_rocket(connection_params_t* params,commands_t command,status_t 
 int select_state(btn_pressed_t input,individual_callback_params_t *  c_params);
 int execute_command(individual_callback_params_t *  c_params,commands_t command,status_t cmd_status,u_int8_t  instruction_code);
 int command_handshake(connection_params_t* params, wireless_data_t msg_send);
-connection_params_t*  start_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input);
+connection_params_t*  start_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input, const char* ca_cert);
 int close_client(connection_params_t* params);
 int close_gpio(gpio_set_t *  btn_gpios);

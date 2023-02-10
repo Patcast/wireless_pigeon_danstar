@@ -74,6 +74,7 @@ typedef struct{
     int host_port;
     const char* host_certificate;
     const char* host_key;
+    const char* ca_cert;
     char host_is_client;
 } connection_params_t;
 

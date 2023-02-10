@@ -1,9 +1,11 @@
 #include "server_mgr.h"
 
 
-int run_server(int myport_input, const char* certificate_input, const char* priv_key_input){
+int run_server(int myport_input, const char* certificate_input, const char* priv_key_input, const char* ca_cert){
     
     gpio_set_t led_set;
+
+     memset(&led_set, 0 , sizeof(gpio_set_t));
 
     connection_params_t* params = malloc(sizeof(connection_params_t));
     MEMORY_ERROR( params);
@@ -12,6 +14,7 @@ int run_server(int myport_input, const char* certificate_input, const char* priv
     params->host_certificate = certificate_input;
     params->host_key = priv_key_input;
     params->host_is_client = FALSE;
+    params->ca_cert= ca_cert;
 
     #ifdef NO_GPIO 
         printf("\n\nNo GPIOs are used\n\n");
@@ -117,12 +120,12 @@ int set_gpio_arm(u_int8_t arm_signal,gpio_set_t* led_set){
         printf("\nARMsignal as received: %d\n",arm_signal);
         unsigned char bit1,bit2,bit3,bit4,bit5,bit6;
 
-        bit6 = (arm_signal & FLAG_SIGNAL_6) ? 1 : 0; 
-        bit5 = (arm_signal & FLAG_SIGNAL_5) ? 1 : 0;
-        bit4 = (arm_signal & FLAG_SIGNAL_4) ? 1 : 0;
-        bit3 = (arm_signal & FLAG_SIGNAL_3) ? 1 : 0;
-        bit2 = (arm_signal & FLAG_SIGNAL_2) ? 1 : 0;
-        bit1 = (arm_signal & FLAG_SIGNAL_1) ? 1 : 0;
+        bit1 = (arm_signal & FLAG_SIGNAL_6) ? 1 : 0; 
+        bit2 = (arm_signal & FLAG_SIGNAL_5) ? 1 : 0;
+        bit3 = (arm_signal & FLAG_SIGNAL_4) ? 1 : 0;
+        bit4 = (arm_signal & FLAG_SIGNAL_3) ? 1 : 0;
+        bit5 = (arm_signal & FLAG_SIGNAL_2) ? 1 : 0;
+        bit6 = (arm_signal & FLAG_SIGNAL_1) ? 1 : 0;
 
         printf ("ARM signal porcessed:%d%d%d%d%d%d\n",bit6,bit5,bit4,bit3,bit2,bit1);
 
@@ -142,12 +145,12 @@ int set_gpio_ign(u_int8_t ign_signal,gpio_set_t* led_set){
         printf("\nIGN signal as received: %d\n",ign_signal);
         unsigned char bit1,bit2,bit3,bit4,bit5,bit6;
 
-        bit6 = (ign_signal & FLAG_SIGNAL_6) ? 1 : 0; 
-        bit5 = (ign_signal & FLAG_SIGNAL_5) ? 1 : 0;
-        bit4 = (ign_signal & FLAG_SIGNAL_4) ? 1 : 0;
-        bit3 = (ign_signal & FLAG_SIGNAL_3) ? 1 : 0;
-        bit2 = (ign_signal & FLAG_SIGNAL_2) ? 1 : 0;
-        bit1 = (ign_signal & FLAG_SIGNAL_1) ? 1 : 0;
+        bit1 = (ign_signal & FLAG_SIGNAL_6) ? 1 : 0; 
+        bit2 = (ign_signal & FLAG_SIGNAL_5) ? 1 : 0;
+        bit3 = (ign_signal & FLAG_SIGNAL_4) ? 1 : 0;
+        bit4 = (ign_signal & FLAG_SIGNAL_3) ? 1 : 0;
+        bit5 = (ign_signal & FLAG_SIGNAL_2) ? 1 : 0;
+        bit6 = (ign_signal & FLAG_SIGNAL_1) ? 1 : 0;
 
         printf ("IGN signal porcessed:%d%d%d%d%d%d\n",bit6,bit5,bit4,bit3,bit2,bit1);
 
@@ -167,28 +170,30 @@ int set_gpio_ign(u_int8_t ign_signal,gpio_set_t* led_set){
 int start_gpio( gpio_set_t* led_set){
 
     #ifndef NO_GPIO
-
+        printf("Starting GPIO...\n");
+        libsoc_set_debug(1);
         led_set->arm1_led = start__led_gpio(PIN_ARM_1);
         led_set->arm2_led = start__led_gpio(PIN_ARM_2);
         led_set->arm3_led = start__led_gpio(PIN_ARM_3);
         led_set->arm4_led = start__led_gpio(PIN_ARM_4);
         led_set->arm5_led = start__led_gpio(PIN_ARM_5);
-        led_set->arm5_led = start__led_gpio(PIN_ARM_6);
+        led_set->arm6_led = start__led_gpio(PIN_ARM_6);
 
         led_set->con1_led = start__led_gpio(PIN_IGN_1);
-        led_set->con1_led = start__led_gpio(PIN_IGN_2);
-        led_set->con1_led = start__led_gpio(PIN_IGN_3);
-        led_set->con1_led = start__led_gpio(PIN_IGN_4);
-        led_set->con1_led = start__led_gpio(PIN_IGN_5);
-        led_set->con1_led = start__led_gpio(PIN_IGN_6);
+        led_set->con2_led = start__led_gpio(PIN_IGN_2);
+        led_set->con3_led = start__led_gpio(PIN_IGN_3);
+        led_set->con4_led = start__led_gpio(PIN_IGN_4);
+        led_set->con5_led = start__led_gpio(PIN_IGN_5);
+        led_set->con6_led = start__led_gpio(PIN_IGN_6);
     #else
-        printf("Starting GPIO...\n");       
+        printf("Starting NNNNNo GPIO...\n");       
     #endif
     return 0;
 }
 
 int reset_gpio(gpio_set_t* led_set){
      #ifndef NO_GPIO 
+        printf("GPIOs were reseted\n\n");
         libsoc_gpio_set_level(led_set->arm1_led, LOW);
         libsoc_gpio_set_level(led_set->arm2_led, LOW);
         libsoc_gpio_set_level(led_set->arm3_led, LOW);
@@ -203,36 +208,37 @@ int reset_gpio(gpio_set_t* led_set){
         libsoc_gpio_set_level(led_set->con5_led, LOW);
         libsoc_gpio_set_level(led_set->con6_led, LOW);
     #else 
-        printf("GPIOs were reseted\n\n");
+        printf("NNNNNNNo GPIOs were reseted\n\n");
     #endif
 }
 
 int close_gpio(gpio_set_t* led_set){
     #ifndef NO_GPIO
+        reset_gpio(led_set);
         int res = libsoc_gpio_free(led_set->arm1_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->arm2_led);
+        res = libsoc_gpio_free(led_set->arm2_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->arm3_led);
+        res = libsoc_gpio_free(led_set->arm3_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->arm4_led);
+        res = libsoc_gpio_free(led_set->arm4_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->arm5_led);
+        res = libsoc_gpio_free(led_set->arm5_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->arm6_led);
+        res = libsoc_gpio_free(led_set->arm6_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
 
-        int res = libsoc_gpio_free(led_set->con1_led);
+        res = libsoc_gpio_free(led_set->con1_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->con2_led);
+        res = libsoc_gpio_free(led_set->con2_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->con3_led);
+        res = libsoc_gpio_free(led_set->con3_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->con4_led);
+        res = libsoc_gpio_free(led_set->con4_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->con5_led);
+        res = libsoc_gpio_free(led_set->con5_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
-        int res = libsoc_gpio_free(led_set->con6_led);
+        res = libsoc_gpio_free(led_set->con6_led);
         if (res == EXIT_FAILURE)perror("Could not free gpio ");
     #endif
 }

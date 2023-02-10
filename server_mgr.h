@@ -39,7 +39,7 @@ typedef struct gpio_btn {
 
 
 
-int run_server(int myport_input, const char* certificate_input, const char* priv_key_input);
+int run_server(int myport_input, const char* certificate_input, const char* priv_key_input, const char* ca_cert);
 int select_state_server(connection_params_t* params, gpio_set_t* led_set);
 int run_zero(connection_params_t* params,wireless_data_t* msg_received, char* error,gpio_set_t* led_set);
 int run_arm(connection_params_t* params,wireless_data_t* msg_received,gpio_set_t* led_set);

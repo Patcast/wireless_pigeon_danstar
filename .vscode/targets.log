@@ -6,11 +6,11 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Aug 13 11:36:20 2022
+# Make data base, printed on Thu Sep  1 13:13:32 2022
 
 # Variables
 
-# environment
+# 'override' directive
 GNUMAKEFLAGS := 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
@@ -47,7 +47,7 @@ CURDIR := /home/hurricane97/Documents/dtu/danStar/integration/danstar_code
 # makefile
 SHELL = /bin/sh
 # environment
-SNAP_DATA = /var/snap/code/102
+SNAP_DATA = /var/snap/code/105
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
@@ -60,6 +60,8 @@ SNAP_INSTANCE_NAME = code
 SNAP_ARCH = amd64
 # makefile (from 'Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
+# makefile (from 'Makefile', line 11)
+CLIENT_COMPILING = conn_mgr.c client_main.c client_mgr.c 
 # automatic
 @F = $(notdir $@)
 # environment
@@ -73,7 +75,7 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/d
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-_ = /snap/code/102/usr/share/code/code
+_ = /snap/code/105/usr/share/code/code
 # environment
 MANAGERPID = 1514
 # environment
@@ -83,11 +85,13 @@ LC_NAME = en_GB.UTF-8
 # environment
 VSCODE_CWD = /home/hurricane97
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/102/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/105/usr/share/glib-2.0/schemas
+# makefile (from 'Makefile', line 8)
+CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure keys/ca.crt 
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /home/hurricane97/anaconda3/bin:/home/hurricane97/anaconda3/condabin:/home/hurricane97/.nvm/versions/node/v14.18.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/hurricane97/Library/Python/3.9/bin:/home/hurricane97/bin
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
@@ -97,11 +101,11 @@ XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/hurricane97/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-SNAP = /snap/code/102
+SNAP = /snap/code/105
 # environment
 NVM_BIN = /home/hurricane97/.nvm/versions/node/v14.18.1/bin
 # environment
-SNAP_VERSION = 3b889b09
+SNAP_VERSION = e4503b30
 # environment
 CONDA_PREFIX = /home/hurricane97/anaconda3
 # environment
@@ -110,10 +114,12 @@ XDG_MENU_PREFIX = gnome-
 DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
+# makefile (from 'Makefile', line 6)
+PORT = 85354
 # environment
 INVOCATION_ID = 69a6395c6161402f9638034271140064
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/102/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/105/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -123,7 +129,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 146346
+GIO_LAUNCHED_DESKTOP_FILE_PID = 490740
 # automatic
 %F = $(notdir $%)
 # environment
@@ -151,11 +157,11 @@ LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /home/hurricane97/.config/Code/CachedData/3b889b090b5ad5793f524b5d1d39fda662b96a2a
+VSCODE_CODE_CACHE_PATH = /home/hurricane97/.config/Code/CachedData/e4503b30fc78200f846c62cf8091b76ff5547662
 # environment
 LOGNAME = hurricane97
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # environment
@@ -189,11 +195,13 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SNAP_USER_DATA = /home/hurricane97/snap/code/102
+SNAP_USER_DATA = /home/hurricane97/snap/code/105
 # environment
 SHLVL = 0
+# makefile (from 'Makefile', line 10)
+SERVER_COMPILING = server_mgr.c server_main.c conn_mgr.c  
 # makefile (from 'Makefile', line 5)
-SERVER_IP = 127.0.0.1
+SERVER_IP = 192.168.192.218
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # default
@@ -201,7 +209,7 @@ MAKE_VERSION := 4.2.1
 # environment
 USER = hurricane97
 # environment
-SNAP_REVISION = 102
+SNAP_REVISION = 105
 # environment
 LC_MONETARY = en_GB.UTF-8
 # makefile (from 'Makefile', line 1)
@@ -216,12 +224,14 @@ LC_TELEPHONE = en_GB.UTF-8
 CONDA_SHLVL = 1
 # default
 MAKE_COMMAND := make
+# makefile (from 'Makefile', line 7)
+SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure keys/ca.crt 
 # default
 .VARIABLES := 
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-f5a863e7-1.69.2-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-f5a863e7-1.70.2-main.sock
 # environment
 BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile
@@ -241,17 +251,25 @@ GDK_BACKEND = x11
 # environment
 LC_PAPER = en_GB.UTF-8
 # environment
+NO_AT_BRIDGE = 1
+# environment
 LC_IDENTIFICATION = en_GB.UTF-8
 # environment
 QT_ACCESSIBILITY = 1
+# makefile (from 'Makefile', line 12)
+GPI0_COMPILING = gpio_handler.c 
 # default
 MAKEFILES := 
+# makefile (from 'Makefile', line 9)
+FAKE_CLIENT = $(SERVER_IP) $(PORT) fake/fake_client.crt fake/fake_client_rsa_private.pem.unsecure
 # environment
 SNAP_COOKIE = EVj6J6THYJZIuBCWhLdxkMugrhyMDyypQELcD_GSVDJp9EwkfAYG
 # environment
 LC_NUMERIC = en_GB.UTF-8
 # automatic
 <F = $(notdir $<)
+# makefile (from 'Makefile', line 13)
+DEBUG_FLAGS = -DNO_GPIO
 # environment
 PS1 = \[\e[32;1m\]\W\[\e[0m\] $ 
 # environment
@@ -260,6 +278,9 @@ LC_MEASUREMENT = en_GB.UTF-8
 SNAP_NAME = code
 # environment
 LC_ALL = C
+ 
+make: *** No rule to make target 'all'.  Stop.
+
 # environment
 CONDA_PYTHON_EXE = /home/hurricane97/anaconda3/bin/python
 # environment
@@ -269,7 +290,7 @@ GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # default
 SUFFIXES := 
 # makefile (from 'Makefile', line 4)
-FLAGS = -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto -lsoc
+FLAGS = -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto 
 # environment
 SNAP_REEXEC = 
 # environment
@@ -278,9 +299,6 @@ _CE_M =
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
 WINDOWPATH = 2
- 
-Makefile:6: *** missing separator.  Stop.
-
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
@@ -292,11 +310,11 @@ LC_ADDRESS = en_GB.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 146392
+VSCODE_PID = 477906
 # environment
 _CE_CONDA = 
 # variable set hash-table stats:
-# Load=141/1024=14%, Rehash=0, Collisions=21/155=14%
+# Load=150/1024=15%, Rehash=0, Collisions=25/175=14%
 
 # Pattern-specific Variable Values
 
@@ -304,9 +322,9 @@ _CE_CONDA =
 
 # Directories
 
-# . (device 66308, inode 6689825): 33 files, no impossibilities.
+# . (device 66308, inode 6689825): 34 files, no impossibilities.
 
-# 33 files, no impossibilities in 1 directories.
+# 34 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -314,18 +332,96 @@ _CE_CONDA =
 
 # Files
 
+non_gpio_server:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 37):
+	@echo -e '\n**********************************'
+	@echo -e '*** Compiling for NON_GPIO_SERVER **'
+	@echo -e '************************************'
+	@mkdir -p build
+	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING) $(DEBUG_FLAGS) $(FLAGS) -o build/no_gpio_rocket_server 
+	@echo -e '\n******************************'
+	@echo -e '*** Running NON_GPIO_SERVER  ***'
+	@echo -e '********************************'
+	@sudo ./build/no_gpio_rocket_server $(SERVER_PARAM)
+
 # Not a target:
 all:
 #  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+client:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+#  recipe to execute (from 'Makefile', line 50):
+	@echo -e '\n*******************************'
+	@echo -e '*** Compiling for UNIT TEST ***'
+	@echo -e '*******************************'
+	@mkdir -p build
+	@gcc  $(CLIENT_COMPILING) $(FLAGS) -lsoc -o build/ignition_box
+	@echo -e '\n*************************'
+	@echo -e '*** Running CLIENT UNIT TEST ***'
+	@echo -e '*************************'
+	@sudo ./build/ignition_box $(CLIENT_PARAM) 
+
+zip:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 113):
+	zip lab7_ex2.zip connmgr.c  errmacros.h connmgr.h config.h lib/dplist.c lib/dplist.h lib/tcpsock.c lib/tcpsock.h
 
 # Not a target:
 Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-08-29 12:07:02.158074651
+#  File has been updated.
+#  Successfully updated.
+
+server:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+#  recipe to execute (from 'Makefile', line 18):
+	@echo -e '\n******************************'
+	@echo -e '*** Compiling for UNIT TEST ***'
+	@echo -e '*******************************'
+	@mkdir -p build
+	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING) $(FLAGS) -lsoc -o build/rocket_server
+	@echo -e '\n******************************'
+	@echo -e '*** Running SERVER UNIT TEST ***'
+	@echo -e '********************************'
+	@sudo ./build/rocket_server $(SERVER_PARAM)
+
+fake_client:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 81):
+	@echo -e '\n*******************************'
+	@echo -e '*** Compiling for UNIT TEST ***'
+	@echo -e '*******************************'
+	@mkdir -p build
+	@gcc  $(CLIENT_COMPILING) $(FLAGS)  -lsoc -o build/ignition_box
+	@echo -e '\n*************************'
+	@echo -e '*** Running FAKE CLIENT UNIT TEST ***'
+	@echo -e '*************************'
+	@sudo ./build/ignition_box $(FAKE_CLIENT) 
+
+run_client:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 61):
+	@echo -e '\n*************************'
+	@echo -e '*** Running CLIENT UNIT TEST ***'
+	@echo -e '*************************'
+	@sudo ./build/ignition_box $(CLIENT_PARAM)
 
 # Not a target:
 .DEFAULT:
@@ -333,20 +429,73 @@ Makefile:
 #  Modification time never checked.
 #  File has not been updated.
 
+run_server:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 29):
+	@echo -e '\n******************************'
+	@echo -e '*** Running SERVER UNIT TEST ***'
+	@echo -e '********************************'
+	@sudo ./build/rocket_server $(SERVER_PARAM)
+
+valgrind_client:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 102):
+	@echo -e '\n*******************************'
+	@echo -e '*** Compiling for UNIT TEST ***'
+	@echo -e '*******************************'
+	@mkdir -p build
+	@gcc -g  $(CLIENT_COMPILING) $(FLAGS)
+	@echo -e '*** Running VALGRIND TEST ***'
+	@echo -e '*************************'
+	@valgrind -s --leak-check=full ./build/server_test $(CLIENT_PARAM)
+
+non_gpio_client:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 68):
+	@echo -e '\n*******************************'
+	@echo -e '*** Compiling for UNIT TEST ***'
+	@echo -e '*******************************'
+	@mkdir -p build
+	@gcc  $(CLIENT_COMPILING) $(DEBUG_FLAGS) $(FLAGS) -o build/non_gpio_ignition_box
+	@echo -e '\n*************************'
+	@echo -e '*** Running CLIENT UNIT TEST ***'
+	@echo -e '*************************'
+	@sudo ./build/non_gpio_ignition_box $(CLIENT_PARAM)
+
+valgrind_server:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 92):
+	@echo -e '\n*******************************'
+	@echo -e '*** Compiling for UNIT TEST ***'
+	@echo -e '*******************************'
+	@mkdir -p build
+	@gcc -g  $(SERVER_COMPILING)  $(FLAGS)
+	@echo -e '*** Running VALGRIND TEST ***'
+	@echo -e '*************************'
+	@valgrind  --show-leak-kinds=all ./build/server_test $(SERVER_PARAM)
+
 # files hash-table stats:
-# Load=4/1024=0%, Rehash=0, Collisions=0/5=0%
+# Load=14/1024=1%, Rehash=0, Collisions=0/24=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 38 / storage = 408 B / avg = 10 B
-# current buf: size = 8162 B / used = 408 B / count = 38 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 49 / storage = 532 B / avg = 10 B
+# current buf: size = 8162 B / used = 532 B / count = 49 / avg = 10 B
 
-# strcache performance: lookups = 42 / hit rate = 9%
+# strcache performance: lookups = 63 / hit rate = 22%
 # hash-table stats:
-# Load=38/8192=0%, Rehash=0, Collisions=1/42=2%
-# Finished Make data base on Sat Aug 13 11:36:20 2022
+# Load=49/8192=1%, Rehash=0, Collisions=1/63=2%
+# Finished Make data base on Thu Sep  1 13:13:32 2022
 
  

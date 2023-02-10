@@ -26,11 +26,11 @@ int callback_con(void* arg)
 #endif
 
 
-int run_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input){
+int run_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input, const char* ca_cert){
 
     callback_params_t pt_call_params;
 
-    connection_params_t* conn_params = start_client(ip_address_input,  myport_input, certificate_input, priv_key_input);
+    connection_params_t* conn_params = start_client(ip_address_input,  myport_input, certificate_input, priv_key_input,ca_cert);
     if(conn_params == NULL)return 1;
     
     #ifdef NO_GPIO 
@@ -44,7 +44,7 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
             if(btn == BTN_CONNECT){
                     if(connect_with_rocket(conn_params,ZERO_CO,REQUESTED,0)==0){
                             do{
-                                printf("\nType the code of the button:\nBTN_CONNECT=\t30\nBTN_RESET=\t115\nBTN_ARM=\t31\nBTN_IGNITE=\t3\nBTN_SHUT_DOWN=\t49\n");
+                                printf("\nType the id of the button:\nBTN_CONNECT=\t30\nBTN_RESET=\t3\nBTN_ARM=\t31\nBTN_IGNITE=\t48\nBTN_SHUT_DOWN=\t49\n");
                                 scanf("%d",(int*) &btn);
                                 select_state(btn,&c_params);
                             }while(conn_params->host_state != SHUT_DOWN);
@@ -53,7 +53,7 @@ int run_client(const char* ip_address_input, const int myport_input, const char*
         }while(conn_params->host_state != SHUT_DOWN);
     #else 
         printf("\n\nGPIOs are used\n\n");
-        gpio_set_t *  btn_gpios = start_gpios(conn_params,&pt_call_params);
+        gpio_set_t *  btn_gpios = start_gpios(conn_params, &pt_call_params);
         if (btn_gpios==NULL) printf("btn_gpios is null");
         do{
             sleep(1);
@@ -190,7 +190,7 @@ int command_handshake(connection_params_t* params, wireless_data_t msg_send){
     return 0;
 }
 
-connection_params_t*  start_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input){
+connection_params_t*  start_client(const char* ip_address_input, const int myport_input, const char* certificate_input, const char* priv_key_input,const char* ca_cert){
     // Start parameters that are used in the connection.
     connection_params_t* params = malloc(sizeof(connection_params_t));
     MEMORY_ERROR( params);
@@ -200,6 +200,7 @@ connection_params_t*  start_client(const char* ip_address_input, const int mypor
     params->host_certificate = certificate_input;
     params->host_key = priv_key_input;
     params->host_is_client = TRUE;
+    params->ca_cert= ca_cert;
 
     if (star_host_connection(params)){ /// This part only needs to be done once.
         printf("error starting host\n");

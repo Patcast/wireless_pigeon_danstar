@@ -1,18 +1,14 @@
 .DEFAULT_GOAL := non_gpio_client
 
 
-FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto -lsoc
-SERVER_IP = 127.0.0.1
-<<<<<<< HEAD
-PORT = 4537
-=======
+FLAGS =  -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto 
+SERVER_IP = 192.168.192.218
 PORT = 85354
->>>>>>> 165ed2bb818efffe793f1961570760990461c440
-SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure
-CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure
+SERVER_PARAM = $(PORT) keys/server.crt keys/server_rsa_private.pem.unsecure keys/ca.crt 
+CLIENT_PARAM = $(SERVER_IP) $(PORT) keys/client.crt keys/client_rsa_private.pem.unsecure keys/ca.crt 
 FAKE_CLIENT = $(SERVER_IP) $(PORT) fake/fake_client.crt fake/fake_client_rsa_private.pem.unsecure
-SERVER_COMPILING = server_mgr.c server_main.c conn_mgr.c -o build/server_test 
-CLIENT_COMPILING = conn_mgr.c client_main.c client_mgr.c -o build/client_test 
+SERVER_COMPILING = server_mgr.c server_main.c conn_mgr.c  
+CLIENT_COMPILING = conn_mgr.c client_main.c client_mgr.c 
 GPI0_COMPILING =  gpio_handler.c 
 DEBUG_FLAGS =  -DNO_GPIO
 
@@ -23,11 +19,18 @@ server:
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING) $(FLAGS)
+	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING) $(FLAGS) -lsoc -o build/rocket_server
 	@echo -e '\n******************************'
 	@echo -e '*** Running SERVER UNIT TEST ***'
 	@echo -e '********************************'
-	@sudo ./build/server_test $(SERVER_PARAM)
+	@sudo ./build/rocket_server $(SERVER_PARAM)
+
+run_server:
+	@echo -e '\n******************************'
+	@echo -e '*** Running SERVER UNIT TEST ***'
+	@echo -e '********************************'
+	@sudo ./build/rocket_server $(SERVER_PARAM)
+
 
 
 non_gpio_server:
@@ -35,11 +38,12 @@ non_gpio_server:
 	@echo -e '*** Compiling for NON_GPIO_SERVER **'
 	@echo -e '************************************'
 	@mkdir -p build
-	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING) $(DEBUG_FLAGS) -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
+	@gcc  $(SERVER_COMPILING) $(GPI0_COMPILING) $(DEBUG_FLAGS) $(FLAGS) -o build/no_gpio_rocket_server 
 	@echo -e '\n******************************'
 	@echo -e '*** Running NON_GPIO_SERVER  ***'
 	@echo -e '********************************'
-	@sudo ./build/server_test $(SERVER_PARAM)
+	@sudo ./build/no_gpio_rocket_server $(SERVER_PARAM)
+
 
 
 client: 
@@ -47,55 +51,43 @@ client:
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  $(CLIENT_COMPILING) $(FLAGS)
+	@gcc  $(CLIENT_COMPILING) $(FLAGS) -lsoc -o build/ignition_box
 	@echo -e '\n*************************'
 	@echo -e '*** Running CLIENT UNIT TEST ***'
 	@echo -e '*************************'
-	@sudo ./build/client_test $(CLIENT_PARAM) 
+	@sudo ./build/ignition_box $(CLIENT_PARAM) 
+
+run_client:
+	@echo -e '\n*************************'
+	@echo -e '*** Running CLIENT UNIT TEST ***'
+	@echo -e '*************************'
+	@sudo ./build/ignition_box $(CLIENT_PARAM)
+
 
 non_gpio_client: 
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  $(CLIENT_COMPILING) $(DEBUG_FLAGS) -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
+	@gcc  $(CLIENT_COMPILING) $(DEBUG_FLAGS) $(FLAGS) -o build/non_gpio_ignition_box
 	@echo -e '\n*************************'
 	@echo -e '*** Running CLIENT UNIT TEST ***'
 	@echo -e '*************************'
-	@sudo ./build/client_test $(CLIENT_PARAM)
+	@sudo ./build/non_gpio_ignition_box $(CLIENT_PARAM)
 
-debug_non_gpio_client: 
-	@echo -e '\n*******************************'
-	@echo -e '*** Compiling for UNIT TEST ***'
-	@echo -e '*******************************'
-	@mkdir -p build
-	@gcc  -g $(CLIENT_COMPILING) $(DEBUG_FLAGS) -std=c11  -D_DEFAULT_SOURCE  -Werror -lm $(shell pkg-config --cflags --libs check) -L/usr/local/lib -lssl -lcrypto
-	@echo -e '\n*************************'
-	@echo -e '*** Running CLIENT UNIT TEST ***'
-	@echo -e '*************************'
-	@sudo gdb -q -tui ./build/client_test $(CLIENT_PARAM)
+ 
 
 fake_client: 
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
 	@echo -e '*******************************'
 	@mkdir -p build
-	@gcc  $(CLIENT_COMPILING) $(FLAGS)
+	@gcc  $(CLIENT_COMPILING) $(FLAGS)  -lsoc -o build/ignition_box
 	@echo -e '\n*************************'
 	@echo -e '*** Running FAKE CLIENT UNIT TEST ***'
 	@echo -e '*************************'
-	@sudo ./build/client_test $(FAKE_CLIENT) 
+	@sudo ./build/ignition_box $(FAKE_CLIENT) 
 
-debug_server: 
-	@echo -e '\n*******************************'
-	@echo -e '*** Compiling for UNIT TEST ***'
-	@echo -e '*******************************'
-	@mkdir -p build
-	@gcc -g  $(SERVER_COMPILING)  $(FLAGS)
-	@echo -e '\n*************************'
-	@echo -e '*** Running DEBUGGER ***'
-	@echo -e '*************************'
-	@gdb -q -tui ./build/server_test $(SERVER_PARAM)
 valgrind_server: 
 	@echo -e '\n*******************************'
 	@echo -e '*** Compiling for UNIT TEST ***'
